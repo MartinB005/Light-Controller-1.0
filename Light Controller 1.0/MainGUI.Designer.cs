@@ -69,18 +69,26 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.newGroup = new Guna.UI.WinForms.GunaButton();
             this.barSync = new Guna.UI.WinForms.GunaButton();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.presetValues = new Guna.UI.WinForms.GunaLabel();
-            this.presetName = new Guna.UI.WinForms.GunaLabel();
-            this.gunaLabel3 = new Guna.UI.WinForms.GunaLabel();
-            this.gunaLabel4 = new Guna.UI.WinForms.GunaLabel();
-            this.gunaLabel5 = new Guna.UI.WinForms.GunaLabel();
-            this.gunaLabel6 = new Guna.UI.WinForms.GunaLabel();
+            this.queueList = new System.Windows.Forms.Panel();
+            this.noPresets = new Guna.UI.WinForms.GunaLabel();
+            this.presetTools = new System.Windows.Forms.Panel();
+            this.startPresetButton = new Guna.UI.WinForms.GunaButton();
+            this.removePreset = new Guna.UI.WinForms.GunaButton();
+            this.moveDown = new Guna.UI.WinForms.GunaButton();
+            this.moveUp = new Guna.UI.WinForms.GunaButton();
             this.presetManagerButton = new Guna.UI.WinForms.GunaButton();
             this.newPreset = new Guna.UI.WinForms.GunaButton();
-            this.panel2.SuspendLayout();
-            this.panel3.SuspendLayout();
+            this.queueText = new Guna.UI.WinForms.GunaLabel();
+            this.startNext = new Guna.UI.WinForms.GunaButton();
+            this.commandButton = new Guna.UI.WinForms.GunaButton();
+            this.clear = new Guna.UI.WinForms.GunaButton();
+            this.cpuUsage = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.cpuUsageLabel = new Guna.UI.WinForms.GunaLabel();
+            this.cpuUsageText = new Guna.UI.WinForms.GunaLabel();
+            this.virtualBeats = new Guna.UI.WinForms.GunaButton();
+            this.queueList.SuspendLayout();
+            this.presetTools.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cpuUsage)).BeginInit();
             this.SuspendLayout();
             // 
             // progressBar
@@ -88,7 +96,7 @@
             this.progressBar.BorderColor = System.Drawing.Color.Black;
             this.progressBar.ColorStyle = Guna.UI.WinForms.ColorStyle.Default;
             this.progressBar.IdleColor = System.Drawing.Color.DarkGray;
-            this.progressBar.Location = new System.Drawing.Point(12, 347);
+            this.progressBar.Location = new System.Drawing.Point(273, 344);
             this.progressBar.Name = "progressBar";
             this.progressBar.ProgressMaxColor = System.Drawing.Color.OrangeRed;
             this.progressBar.ProgressMinColor = System.Drawing.Color.Chartreuse;
@@ -147,11 +155,11 @@
             this.gunaLabel1.AutoSize = true;
             this.gunaLabel1.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.gunaLabel1.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.gunaLabel1.Location = new System.Drawing.Point(645, 457);
+            this.gunaLabel1.Location = new System.Drawing.Point(396, 209);
             this.gunaLabel1.Name = "gunaLabel1";
-            this.gunaLabel1.Size = new System.Drawing.Size(55, 15);
+            this.gunaLabel1.Size = new System.Drawing.Size(13, 15);
             this.gunaLabel1.TabIndex = 7;
-            this.gunaLabel1.Text = "Progress:";
+            this.gunaLabel1.Text = "1";
             // 
             // colorDialog1
             // 
@@ -182,7 +190,7 @@
             this.beat1.BackColor = System.Drawing.Color.Transparent;
             this.beat1.Font = new System.Drawing.Font("Segoe UI", 50F);
             this.beat1.ForeColor = System.Drawing.Color.MediumTurquoise;
-            this.beat1.Location = new System.Drawing.Point(8, -18);
+            this.beat1.Location = new System.Drawing.Point(268, 43);
             this.beat1.Margin = new System.Windows.Forms.Padding(0);
             this.beat1.Name = "beat1";
             this.beat1.Size = new System.Drawing.Size(65, 89);
@@ -196,7 +204,7 @@
             this.beat2.BackColor = System.Drawing.Color.Transparent;
             this.beat2.Font = new System.Drawing.Font("Segoe UI", 50F);
             this.beat2.ForeColor = System.Drawing.Color.MediumTurquoise;
-            this.beat2.Location = new System.Drawing.Point(46, -18);
+            this.beat2.Location = new System.Drawing.Point(306, 43);
             this.beat2.Margin = new System.Windows.Forms.Padding(0);
             this.beat2.Name = "beat2";
             this.beat2.Size = new System.Drawing.Size(65, 89);
@@ -210,7 +218,7 @@
             this.beat3.BackColor = System.Drawing.Color.Transparent;
             this.beat3.Font = new System.Drawing.Font("Segoe UI", 50F);
             this.beat3.ForeColor = System.Drawing.Color.MediumTurquoise;
-            this.beat3.Location = new System.Drawing.Point(84, -18);
+            this.beat3.Location = new System.Drawing.Point(344, 43);
             this.beat3.Margin = new System.Windows.Forms.Padding(0);
             this.beat3.Name = "beat3";
             this.beat3.Size = new System.Drawing.Size(65, 89);
@@ -224,7 +232,7 @@
             this.beat4.BackColor = System.Drawing.Color.Transparent;
             this.beat4.Font = new System.Drawing.Font("Segoe UI", 50F);
             this.beat4.ForeColor = System.Drawing.Color.MediumTurquoise;
-            this.beat4.Location = new System.Drawing.Point(123, -18);
+            this.beat4.Location = new System.Drawing.Point(383, 43);
             this.beat4.Margin = new System.Windows.Forms.Padding(0);
             this.beat4.Name = "beat4";
             this.beat4.Size = new System.Drawing.Size(65, 89);
@@ -234,10 +242,11 @@
             // 
             // bpm
             // 
+            this.bpm.AutoEllipsis = true;
             this.bpm.AutoSize = true;
             this.bpm.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.bpm.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.bpm.Location = new System.Drawing.Point(20, 148);
+            this.bpm.Location = new System.Drawing.Point(280, 209);
             this.bpm.Name = "bpm";
             this.bpm.Size = new System.Drawing.Size(38, 15);
             this.bpm.TabIndex = 13;
@@ -257,7 +266,7 @@
             this.startButton.Image = null;
             this.startButton.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.startButton.ImageSize = new System.Drawing.Size(20, 20);
-            this.startButton.Location = new System.Drawing.Point(11, 198);
+            this.startButton.Location = new System.Drawing.Point(271, 259);
             this.startButton.Name = "startButton";
             this.startButton.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
             this.startButton.OnHoverBorderColor = System.Drawing.Color.Black;
@@ -272,14 +281,13 @@
             // 
             // displayView
             // 
-            this.displayView.AutoSize = true;
             this.displayView.Font = new System.Drawing.Font("Segoe UI", 25F);
             this.displayView.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.displayView.Location = new System.Drawing.Point(454, 18);
+            this.displayView.Location = new System.Drawing.Point(321, 14);
             this.displayView.Name = "displayView";
-            this.displayView.Size = new System.Drawing.Size(29, 46);
+            this.displayView.Size = new System.Drawing.Size(544, 62);
             this.displayView.TabIndex = 15;
-            this.displayView.Text = " ";
+            this.displayView.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // desk1
             // 
@@ -289,7 +297,7 @@
             this.desk1.CheckedOnColor = System.Drawing.Color.DodgerBlue;
             this.desk1.FillColor = System.Drawing.Color.White;
             this.desk1.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.desk1.Location = new System.Drawing.Point(25, 74);
+            this.desk1.Location = new System.Drawing.Point(285, 135);
             this.desk1.Name = "desk1";
             this.desk1.Size = new System.Drawing.Size(65, 20);
             this.desk1.TabIndex = 16;
@@ -303,7 +311,7 @@
             this.desk2.CheckedOnColor = System.Drawing.Color.DodgerBlue;
             this.desk2.FillColor = System.Drawing.Color.White;
             this.desk2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.desk2.Location = new System.Drawing.Point(25, 100);
+            this.desk2.Location = new System.Drawing.Point(285, 161);
             this.desk2.Name = "desk2";
             this.desk2.Size = new System.Drawing.Size(65, 20);
             this.desk2.TabIndex = 17;
@@ -317,7 +325,7 @@
             this.auto.CheckedOnColor = System.Drawing.Color.DodgerBlue;
             this.auto.FillColor = System.Drawing.Color.White;
             this.auto.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.auto.Location = new System.Drawing.Point(99, 80);
+            this.auto.Location = new System.Drawing.Point(359, 141);
             this.auto.Name = "auto";
             this.auto.Size = new System.Drawing.Size(53, 20);
             this.auto.TabIndex = 18;
@@ -329,7 +337,7 @@
             this.close.BackColor = System.Drawing.Color.Transparent;
             this.close.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.close.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.close.Location = new System.Drawing.Point(946, -3);
+            this.close.Location = new System.Drawing.Point(1046, -3);
             this.close.Margin = new System.Windows.Forms.Padding(0);
             this.close.Name = "close";
             this.close.Size = new System.Drawing.Size(39, 36);
@@ -345,7 +353,7 @@
             this.gunaLabel2.AutoSize = true;
             this.gunaLabel2.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.gunaLabel2.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.gunaLabel2.Location = new System.Drawing.Point(5, 557);
+            this.gunaLabel2.Location = new System.Drawing.Point(266, 547);
             this.gunaLabel2.Name = "gunaLabel2";
             this.gunaLabel2.Size = new System.Drawing.Size(38, 15);
             this.gunaLabel2.TabIndex = 19;
@@ -357,7 +365,7 @@
             this.minimize.BackColor = System.Drawing.Color.Transparent;
             this.minimize.Font = new System.Drawing.Font("Segoe UI Black", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.minimize.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.minimize.Location = new System.Drawing.Point(868, -3);
+            this.minimize.Location = new System.Drawing.Point(968, -3);
             this.minimize.Margin = new System.Windows.Forms.Padding(0);
             this.minimize.Name = "minimize";
             this.minimize.Size = new System.Drawing.Size(37, 36);
@@ -374,7 +382,7 @@
             this.maximize.BackColor = System.Drawing.Color.Transparent;
             this.maximize.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.maximize.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.maximize.Location = new System.Drawing.Point(908, -3);
+            this.maximize.Location = new System.Drawing.Point(1008, -3);
             this.maximize.Margin = new System.Windows.Forms.Padding(0);
             this.maximize.Name = "maximize";
             this.maximize.Size = new System.Drawing.Size(41, 36);
@@ -396,20 +404,21 @@
             this.portSelection.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.portSelection.ForeColor = System.Drawing.Color.Black;
             this.portSelection.FormattingEnabled = true;
-            this.portSelection.Location = new System.Drawing.Point(61, 468);
+            this.portSelection.Location = new System.Drawing.Point(321, 470);
             this.portSelection.Name = "portSelection";
             this.portSelection.OnHoverItemBaseColor = System.Drawing.Color.SteelBlue;
             this.portSelection.OnHoverItemForeColor = System.Drawing.Color.White;
             this.portSelection.Size = new System.Drawing.Size(121, 26);
             this.portSelection.TabIndex = 24;
-            this.portSelection.SelectedIndexChanged += new System.EventHandler(this.selectPort);
+            this.portSelection.SelectedIndexChanged += new System.EventHandler(this.SelectPort);
+            this.portSelection.Click += new System.EventHandler(this.portSelection_Click);
             // 
             // portText
             // 
             this.portText.AutoSize = true;
             this.portText.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.portText.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.portText.Location = new System.Drawing.Point(60, 450);
+            this.portText.Location = new System.Drawing.Point(318, 450);
             this.portText.Name = "portText";
             this.portText.Size = new System.Drawing.Size(32, 15);
             this.portText.TabIndex = 25;
@@ -427,7 +436,7 @@
             this.connect.ForeColor = System.Drawing.Color.White;
             this.connect.Image = global::Light_Controller_1._0.Properties.Resources.arduino1;
             this.connect.ImageSize = new System.Drawing.Size(22, 22);
-            this.connect.Location = new System.Drawing.Point(61, 395);
+            this.connect.Location = new System.Drawing.Point(317, 397);
             this.connect.Name = "connect";
             this.connect.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
             this.connect.OnHoverBorderColor = System.Drawing.Color.Black;
@@ -454,6 +463,7 @@
             this.brightness.TrackIdleColor = System.Drawing.Color.Silver;
             this.brightness.TrackPressedColor = System.Drawing.Color.DodgerBlue;
             this.brightness.Scroll += new System.Windows.Forms.ScrollEventHandler(this.brigthnessTrackBar_Scroll);
+            this.brightness.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TrackBars_ScrollingStoped);
             // 
             // bgText
             // 
@@ -480,6 +490,7 @@
             this.colorSpeed.TrackIdleColor = System.Drawing.Color.Silver;
             this.colorSpeed.TrackPressedColor = System.Drawing.Color.DodgerBlue;
             this.colorSpeed.Scroll += new System.Windows.Forms.ScrollEventHandler(this.speedTrackBar_Scroll);
+            this.colorSpeed.MouseUp += new System.Windows.Forms.MouseEventHandler(this.TrackBars_ScrollingStoped);
             // 
             // speedText
             // 
@@ -502,7 +513,7 @@
             this.light1.Location = new System.Drawing.Point(435, 27);
             this.light1.Margin = new System.Windows.Forms.Padding(0);
             this.light1.Name = "light1";
-            this.light1.Size = new System.Drawing.Size(300, 120);
+            this.light1.Size = new System.Drawing.Size(183, 120);
             this.light1.TabIndex = 31;
             this.light1.Text = "•";
             // 
@@ -516,7 +527,7 @@
             this.light2.Location = new System.Drawing.Point(502, 27);
             this.light2.Margin = new System.Windows.Forms.Padding(0);
             this.light2.Name = "light2";
-            this.light2.Size = new System.Drawing.Size(300, 120);
+            this.light2.Size = new System.Drawing.Size(183, 120);
             this.light2.TabIndex = 32;
             this.light2.Text = "•";
             // 
@@ -530,7 +541,7 @@
             this.light3.Location = new System.Drawing.Point(569, 27);
             this.light3.Margin = new System.Windows.Forms.Padding(0);
             this.light3.Name = "light3";
-            this.light3.Size = new System.Drawing.Size(300, 120);
+            this.light3.Size = new System.Drawing.Size(192, 120);
             this.light3.TabIndex = 33;
             this.light3.Text = "•";
             // 
@@ -544,7 +555,7 @@
             this.light4.Location = new System.Drawing.Point(636, 27);
             this.light4.Margin = new System.Windows.Forms.Padding(0);
             this.light4.Name = "light4";
-            this.light4.Size = new System.Drawing.Size(300, 120);
+            this.light4.Size = new System.Drawing.Size(188, 120);
             this.light4.TabIndex = 34;
             this.light4.Text = "•";
             // 
@@ -623,7 +634,7 @@
             this.barSync.Image = null;
             this.barSync.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.barSync.ImageSize = new System.Drawing.Size(20, 20);
-            this.barSync.Location = new System.Drawing.Point(99, 198);
+            this.barSync.Location = new System.Drawing.Point(359, 259);
             this.barSync.Name = "barSync";
             this.barSync.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
             this.barSync.OnHoverBorderColor = System.Drawing.Color.Black;
@@ -636,103 +647,145 @@
             this.barSync.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.barSync.Click += new System.EventHandler(this.barSync_Click);
             // 
-            // panel2
+            // queueList
             // 
-            this.panel2.Controls.Add(this.panel3);
-            this.panel2.Location = new System.Drawing.Point(208, 27);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(224, 502);
-            this.panel2.TabIndex = 56;
+            this.queueList.AutoScroll = true;
+            this.queueList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
+            this.queueList.Controls.Add(this.noPresets);
+            this.queueList.Location = new System.Drawing.Point(5, 45);
+            this.queueList.Name = "queueList";
+            this.queueList.Size = new System.Drawing.Size(258, 438);
+            this.queueList.TabIndex = 56;
+            this.queueList.Click += new System.EventHandler(this.queueList_Click);
             // 
-            // panel3
+            // noPresets
             // 
-            this.panel3.Controls.Add(this.presetValues);
-            this.panel3.Controls.Add(this.presetName);
-            this.panel3.Controls.Add(this.gunaLabel3);
-            this.panel3.Controls.Add(this.gunaLabel4);
-            this.panel3.Controls.Add(this.gunaLabel5);
-            this.panel3.Controls.Add(this.gunaLabel6);
-            this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(224, 67);
-            this.panel3.TabIndex = 0;
+            this.noPresets.AutoSize = true;
+            this.noPresets.Font = new System.Drawing.Font("Calibri", 11F, System.Drawing.FontStyle.Bold);
+            this.noPresets.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.noPresets.Location = new System.Drawing.Point(57, 202);
+            this.noPresets.Name = "noPresets";
+            this.noPresets.Size = new System.Drawing.Size(135, 18);
+            this.noPresets.TabIndex = 57;
+            this.noPresets.Tag = "-1";
+            this.noPresets.Text = "No presets in Queue";
             // 
-            // presetValues
+            // presetTools
             // 
-            this.presetValues.AutoSize = true;
-            this.presetValues.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.presetValues.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.presetValues.Location = new System.Drawing.Point(16, 25);
-            this.presetValues.Name = "presetValues";
-            this.presetValues.Size = new System.Drawing.Size(0, 15);
-            this.presetValues.TabIndex = 57;
+            this.presetTools.AutoScroll = true;
+            this.presetTools.Controls.Add(this.startPresetButton);
+            this.presetTools.Controls.Add(this.removePreset);
+            this.presetTools.Controls.Add(this.moveDown);
+            this.presetTools.Controls.Add(this.moveUp);
+            this.presetTools.Location = new System.Drawing.Point(-4, 486);
+            this.presetTools.Name = "presetTools";
+            this.presetTools.Size = new System.Drawing.Size(268, 48);
+            this.presetTools.TabIndex = 54;
+            this.presetTools.Visible = false;
             // 
-            // presetName
+            // startPresetButton
             // 
-            this.presetName.AutoSize = true;
-            this.presetName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.presetName.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.presetName.Location = new System.Drawing.Point(8, 6);
-            this.presetName.Name = "presetName";
-            this.presetName.Size = new System.Drawing.Size(148, 19);
-            this.presetName.TabIndex = 57;
-            this.presetName.Text = "No presets in Queue";
+            this.startPresetButton.AnimationHoverSpeed = 0.07F;
+            this.startPresetButton.AnimationSpeed = 0.03F;
+            this.startPresetButton.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.startPresetButton.BorderColor = System.Drawing.Color.Black;
+            this.startPresetButton.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.startPresetButton.FocusedColor = System.Drawing.Color.Empty;
+            this.startPresetButton.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.startPresetButton.ForeColor = System.Drawing.Color.White;
+            this.startPresetButton.Image = null;
+            this.startPresetButton.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.startPresetButton.ImageSize = new System.Drawing.Size(20, 20);
+            this.startPresetButton.Location = new System.Drawing.Point(176, 5);
+            this.startPresetButton.Name = "startPresetButton";
+            this.startPresetButton.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.startPresetButton.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.startPresetButton.OnHoverForeColor = System.Drawing.Color.White;
+            this.startPresetButton.OnHoverImage = null;
+            this.startPresetButton.OnPressedColor = System.Drawing.Color.Black;
+            this.startPresetButton.Size = new System.Drawing.Size(89, 35);
+            this.startPresetButton.TabIndex = 64;
+            this.startPresetButton.Text = "Start";
+            this.startPresetButton.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.startPresetButton.Click += new System.EventHandler(this.StartPresetButton_Click);
             // 
-            // gunaLabel3
+            // removePreset
             // 
-            this.gunaLabel3.AutoSize = true;
-            this.gunaLabel3.BackColor = System.Drawing.Color.Transparent;
-            this.gunaLabel3.Font = new System.Drawing.Font("Segoe UI", 50F);
-            this.gunaLabel3.ForeColor = System.Drawing.Color.Black;
-            this.gunaLabel3.Location = new System.Drawing.Point(149, 1);
-            this.gunaLabel3.Margin = new System.Windows.Forms.Padding(0);
-            this.gunaLabel3.Name = "gunaLabel3";
-            this.gunaLabel3.Size = new System.Drawing.Size(65, 89);
-            this.gunaLabel3.TabIndex = 60;
-            this.gunaLabel3.Text = "•";
-            this.gunaLabel3.Visible = false;
+            this.removePreset.AnimationHoverSpeed = 0.07F;
+            this.removePreset.AnimationSpeed = 0.03F;
+            this.removePreset.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.removePreset.BorderColor = System.Drawing.Color.Black;
+            this.removePreset.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.removePreset.FocusedColor = System.Drawing.Color.Empty;
+            this.removePreset.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.removePreset.ForeColor = System.Drawing.Color.White;
+            this.removePreset.Image = null;
+            this.removePreset.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.removePreset.ImageSize = new System.Drawing.Size(20, 20);
+            this.removePreset.Location = new System.Drawing.Point(10, 5);
+            this.removePreset.Name = "removePreset";
+            this.removePreset.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.removePreset.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.removePreset.OnHoverForeColor = System.Drawing.Color.White;
+            this.removePreset.OnHoverImage = null;
+            this.removePreset.OnPressedColor = System.Drawing.Color.Black;
+            this.removePreset.Size = new System.Drawing.Size(85, 35);
+            this.removePreset.TabIndex = 65;
+            this.removePreset.Text = "Remove";
+            this.removePreset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.removePreset.Click += new System.EventHandler(this.removePreset_Click);
             // 
-            // gunaLabel4
+            // moveDown
             // 
-            this.gunaLabel4.AutoSize = true;
-            this.gunaLabel4.BackColor = System.Drawing.Color.Transparent;
-            this.gunaLabel4.Font = new System.Drawing.Font("Segoe UI", 50F);
-            this.gunaLabel4.ForeColor = System.Drawing.Color.Black;
-            this.gunaLabel4.Location = new System.Drawing.Point(107, 1);
-            this.gunaLabel4.Margin = new System.Windows.Forms.Padding(0);
-            this.gunaLabel4.Name = "gunaLabel4";
-            this.gunaLabel4.Size = new System.Drawing.Size(65, 89);
-            this.gunaLabel4.TabIndex = 59;
-            this.gunaLabel4.Text = "•";
-            this.gunaLabel4.Visible = false;
+            this.moveDown.AnimationHoverSpeed = 0.07F;
+            this.moveDown.AnimationSpeed = 0.03F;
+            this.moveDown.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.moveDown.BorderColor = System.Drawing.Color.Black;
+            this.moveDown.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.moveDown.FocusedColor = System.Drawing.Color.Empty;
+            this.moveDown.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.moveDown.ForeColor = System.Drawing.Color.White;
+            this.moveDown.Image = null;
+            this.moveDown.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.moveDown.ImageSize = new System.Drawing.Size(20, 20);
+            this.moveDown.Location = new System.Drawing.Point(138, 5);
+            this.moveDown.Name = "moveDown";
+            this.moveDown.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.moveDown.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.moveDown.OnHoverForeColor = System.Drawing.Color.White;
+            this.moveDown.OnHoverImage = null;
+            this.moveDown.OnPressedColor = System.Drawing.Color.Black;
+            this.moveDown.Size = new System.Drawing.Size(32, 35);
+            this.moveDown.TabIndex = 63;
+            this.moveDown.Text = "▼";
+            this.moveDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.moveDown.Click += new System.EventHandler(this.moveDown_Click);
             // 
-            // gunaLabel5
+            // moveUp
             // 
-            this.gunaLabel5.AutoSize = true;
-            this.gunaLabel5.BackColor = System.Drawing.Color.Transparent;
-            this.gunaLabel5.Font = new System.Drawing.Font("Segoe UI", 50F);
-            this.gunaLabel5.ForeColor = System.Drawing.Color.Black;
-            this.gunaLabel5.Location = new System.Drawing.Point(67, 1);
-            this.gunaLabel5.Margin = new System.Windows.Forms.Padding(0);
-            this.gunaLabel5.Name = "gunaLabel5";
-            this.gunaLabel5.Size = new System.Drawing.Size(65, 89);
-            this.gunaLabel5.TabIndex = 58;
-            this.gunaLabel5.Text = "•";
-            this.gunaLabel5.Visible = false;
-            // 
-            // gunaLabel6
-            // 
-            this.gunaLabel6.AutoSize = true;
-            this.gunaLabel6.BackColor = System.Drawing.Color.Transparent;
-            this.gunaLabel6.Font = new System.Drawing.Font("Segoe UI", 50F);
-            this.gunaLabel6.ForeColor = System.Drawing.Color.Black;
-            this.gunaLabel6.Location = new System.Drawing.Point(24, 1);
-            this.gunaLabel6.Margin = new System.Windows.Forms.Padding(0);
-            this.gunaLabel6.Name = "gunaLabel6";
-            this.gunaLabel6.Size = new System.Drawing.Size(65, 89);
-            this.gunaLabel6.TabIndex = 57;
-            this.gunaLabel6.Text = "•";
-            this.gunaLabel6.Visible = false;
+            this.moveUp.AnimationHoverSpeed = 0.07F;
+            this.moveUp.AnimationSpeed = 0.03F;
+            this.moveUp.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.moveUp.BorderColor = System.Drawing.Color.Black;
+            this.moveUp.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.moveUp.FocusedColor = System.Drawing.Color.Empty;
+            this.moveUp.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.moveUp.ForeColor = System.Drawing.Color.White;
+            this.moveUp.Image = null;
+            this.moveUp.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.moveUp.ImageSize = new System.Drawing.Size(20, 20);
+            this.moveUp.Location = new System.Drawing.Point(101, 5);
+            this.moveUp.Name = "moveUp";
+            this.moveUp.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.moveUp.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.moveUp.OnHoverForeColor = System.Drawing.Color.White;
+            this.moveUp.OnHoverImage = null;
+            this.moveUp.OnPressedColor = System.Drawing.Color.Black;
+            this.moveUp.Size = new System.Drawing.Size(32, 35);
+            this.moveUp.TabIndex = 62;
+            this.moveUp.Text = "▲";
+            this.moveUp.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.moveUp.Click += new System.EventHandler(this.moveUp_Click);
             // 
             // presetManagerButton
             // 
@@ -747,14 +800,14 @@
             this.presetManagerButton.Image = null;
             this.presetManagerButton.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.presetManagerButton.ImageSize = new System.Drawing.Size(20, 20);
-            this.presetManagerButton.Location = new System.Drawing.Point(208, 537);
+            this.presetManagerButton.Location = new System.Drawing.Point(5, 489);
             this.presetManagerButton.Name = "presetManagerButton";
             this.presetManagerButton.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
             this.presetManagerButton.OnHoverBorderColor = System.Drawing.Color.Black;
             this.presetManagerButton.OnHoverForeColor = System.Drawing.Color.White;
             this.presetManagerButton.OnHoverImage = null;
             this.presetManagerButton.OnPressedColor = System.Drawing.Color.Black;
-            this.presetManagerButton.Size = new System.Drawing.Size(132, 35);
+            this.presetManagerButton.Size = new System.Drawing.Size(158, 35);
             this.presetManagerButton.TabIndex = 57;
             this.presetManagerButton.Text = "Preset Manager";
             this.presetManagerButton.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -773,18 +826,167 @@
             this.newPreset.Image = null;
             this.newPreset.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.newPreset.ImageSize = new System.Drawing.Size(20, 20);
-            this.newPreset.Location = new System.Drawing.Point(353, 537);
+            this.newPreset.Location = new System.Drawing.Point(169, 489);
             this.newPreset.Name = "newPreset";
             this.newPreset.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
             this.newPreset.OnHoverBorderColor = System.Drawing.Color.Black;
             this.newPreset.OnHoverForeColor = System.Drawing.Color.White;
             this.newPreset.OnHoverImage = null;
             this.newPreset.OnPressedColor = System.Drawing.Color.Black;
-            this.newPreset.Size = new System.Drawing.Size(79, 35);
+            this.newPreset.Size = new System.Drawing.Size(91, 35);
             this.newPreset.TabIndex = 58;
             this.newPreset.Text = "New";
             this.newPreset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.newPreset.Click += new System.EventHandler(this.newPreset_Click);
+            // 
+            // queueText
+            // 
+            this.queueText.AutoSize = true;
+            this.queueText.Font = new System.Drawing.Font("Calibri", 14F, System.Drawing.FontStyle.Bold);
+            this.queueText.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.queueText.Location = new System.Drawing.Point(10, 14);
+            this.queueText.Name = "queueText";
+            this.queueText.Size = new System.Drawing.Size(63, 23);
+            this.queueText.TabIndex = 61;
+            this.queueText.Text = "Queue";
+            // 
+            // startNext
+            // 
+            this.startNext.AnimationHoverSpeed = 0.07F;
+            this.startNext.AnimationSpeed = 0.03F;
+            this.startNext.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.startNext.BorderColor = System.Drawing.Color.Black;
+            this.startNext.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.startNext.FocusedColor = System.Drawing.Color.Empty;
+            this.startNext.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.startNext.ForeColor = System.Drawing.Color.White;
+            this.startNext.Image = null;
+            this.startNext.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.startNext.ImageSize = new System.Drawing.Size(20, 20);
+            this.startNext.Location = new System.Drawing.Point(70, 535);
+            this.startNext.Name = "startNext";
+            this.startNext.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.startNext.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.startNext.OnHoverForeColor = System.Drawing.Color.White;
+            this.startNext.OnHoverImage = null;
+            this.startNext.OnPressedColor = System.Drawing.Color.Black;
+            this.startNext.Size = new System.Drawing.Size(119, 43);
+            this.startNext.TabIndex = 62;
+            this.startNext.Text = "START NEXT";
+            this.startNext.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.startNext.Click += new System.EventHandler(this.startNext_Click);
+            // 
+            // commandButton
+            // 
+            this.commandButton.AnimationHoverSpeed = 0.07F;
+            this.commandButton.AnimationSpeed = 0.03F;
+            this.commandButton.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.commandButton.BorderColor = System.Drawing.Color.Black;
+            this.commandButton.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.commandButton.FocusedColor = System.Drawing.Color.Empty;
+            this.commandButton.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.commandButton.ForeColor = System.Drawing.Color.White;
+            this.commandButton.Image = null;
+            this.commandButton.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.commandButton.ImageSize = new System.Drawing.Size(20, 20);
+            this.commandButton.Location = new System.Drawing.Point(329, 512);
+            this.commandButton.Name = "commandButton";
+            this.commandButton.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.commandButton.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.commandButton.OnHoverForeColor = System.Drawing.Color.White;
+            this.commandButton.OnHoverImage = null;
+            this.commandButton.OnPressedColor = System.Drawing.Color.Black;
+            this.commandButton.Size = new System.Drawing.Size(107, 35);
+            this.commandButton.TabIndex = 63;
+            this.commandButton.Text = "Command...";
+            this.commandButton.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.commandButton.Click += new System.EventHandler(this.commandButton_Click);
+            // 
+            // clear
+            // 
+            this.clear.AnimationHoverSpeed = 0.07F;
+            this.clear.AnimationSpeed = 0.03F;
+            this.clear.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.clear.BorderColor = System.Drawing.Color.Black;
+            this.clear.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.clear.Enabled = false;
+            this.clear.FocusedColor = System.Drawing.Color.Empty;
+            this.clear.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.clear.ForeColor = System.Drawing.Color.White;
+            this.clear.Image = null;
+            this.clear.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.clear.ImageSize = new System.Drawing.Size(20, 20);
+            this.clear.Location = new System.Drawing.Point(217, 14);
+            this.clear.Name = "clear";
+            this.clear.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.clear.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.clear.OnHoverForeColor = System.Drawing.Color.White;
+            this.clear.OnHoverImage = null;
+            this.clear.OnPressedColor = System.Drawing.Color.Black;
+            this.clear.Size = new System.Drawing.Size(47, 25);
+            this.clear.TabIndex = 66;
+            this.clear.Text = "Clear";
+            this.clear.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.clear.Click += new System.EventHandler(this.Clear_Click);
+            // 
+            // cpuUsage
+            // 
+            this.cpuUsage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
+            this.cpuUsage.Location = new System.Drawing.Point(875, 106);
+            this.cpuUsage.Name = "cpuUsage";
+            this.cpuUsage.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.SeaGreen;
+            this.cpuUsage.Size = new System.Drawing.Size(130, 89);
+            this.cpuUsage.TabIndex = 67;
+            // 
+            // cpuUsageLabel
+            // 
+            this.cpuUsageLabel.AutoEllipsis = true;
+            this.cpuUsageLabel.AutoSize = true;
+            this.cpuUsageLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.cpuUsageLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.cpuUsageLabel.Location = new System.Drawing.Point(888, 209);
+            this.cpuUsageLabel.Name = "cpuUsageLabel";
+            this.cpuUsageLabel.Size = new System.Drawing.Size(117, 45);
+            this.cpuUsageLabel.TabIndex = 68;
+            this.cpuUsageLabel.Text = "Total:  0%\r\nLight Controller: 0%\r\nMemory Usage: 0MB";
+            // 
+            // cpuUsageText
+            // 
+            this.cpuUsageText.AutoEllipsis = true;
+            this.cpuUsageText.AutoSize = true;
+            this.cpuUsageText.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.cpuUsageText.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.cpuUsageText.Location = new System.Drawing.Point(898, 82);
+            this.cpuUsageText.Name = "cpuUsageText";
+            this.cpuUsageText.Size = new System.Drawing.Size(87, 21);
+            this.cpuUsageText.TabIndex = 69;
+            this.cpuUsageText.Text = "CPU Usage";
+            // 
+            // virtualBeats
+            // 
+            this.virtualBeats.AnimationHoverSpeed = 0.07F;
+            this.virtualBeats.AnimationSpeed = 0.03F;
+            this.virtualBeats.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.virtualBeats.BorderColor = System.Drawing.Color.Black;
+            this.virtualBeats.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.virtualBeats.FocusedColor = System.Drawing.Color.Empty;
+            this.virtualBeats.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.virtualBeats.ForeColor = System.Drawing.Color.White;
+            this.virtualBeats.Image = null;
+            this.virtualBeats.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.virtualBeats.ImageSize = new System.Drawing.Size(20, 20);
+            this.virtualBeats.Location = new System.Drawing.Point(314, 317);
+            this.virtualBeats.Name = "virtualBeats";
+            this.virtualBeats.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.virtualBeats.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.virtualBeats.OnHoverForeColor = System.Drawing.Color.White;
+            this.virtualBeats.OnHoverImage = null;
+            this.virtualBeats.OnPressedColor = System.Drawing.Color.Black;
+            this.virtualBeats.Size = new System.Drawing.Size(98, 32);
+            this.virtualBeats.TabIndex = 70;
+            this.virtualBeats.Text = "Virtual Beats...";
+            this.virtualBeats.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.virtualBeats.Click += new System.EventHandler(this.virtualBeats_Click);
             // 
             // MainGUI
             // 
@@ -793,11 +995,20 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(984, 584);
+            this.ClientSize = new System.Drawing.Size(1084, 584);
             this.ControlBox = false;
+            this.Controls.Add(this.virtualBeats);
+            this.Controls.Add(this.cpuUsageText);
+            this.Controls.Add(this.cpuUsageLabel);
+            this.Controls.Add(this.cpuUsage);
+            this.Controls.Add(this.clear);
+            this.Controls.Add(this.commandButton);
+            this.Controls.Add(this.startNext);
+            this.Controls.Add(this.presetTools);
+            this.Controls.Add(this.queueText);
             this.Controls.Add(this.newPreset);
             this.Controls.Add(this.presetManagerButton);
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.queueList);
             this.Controls.Add(this.barSync);
             this.Controls.Add(this.newGroup);
             this.Controls.Add(this.panel1);
@@ -836,13 +1047,16 @@
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainGUI";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Light Controller 1.0";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
-            this.panel2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
+            this.queueList.ResumeLayout(false);
+            this.queueList.PerformLayout();
+            this.presetTools.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cpuUsage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -888,16 +1102,23 @@
         private System.Windows.Forms.Panel panel1;
         private Guna.UI.WinForms.GunaButton newGroup;
         private Guna.UI.WinForms.GunaButton barSync;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
-        private Guna.UI.WinForms.GunaLabel presetValues;
-        private Guna.UI.WinForms.GunaLabel presetName;
-        private Guna.UI.WinForms.GunaLabel gunaLabel3;
-        private Guna.UI.WinForms.GunaLabel gunaLabel4;
-        private Guna.UI.WinForms.GunaLabel gunaLabel5;
-        private Guna.UI.WinForms.GunaLabel gunaLabel6;
+        private System.Windows.Forms.Panel queueList;
+        private Guna.UI.WinForms.GunaLabel noPresets;
         private Guna.UI.WinForms.GunaButton presetManagerButton;
         private Guna.UI.WinForms.GunaButton newPreset;
+        private Guna.UI.WinForms.GunaLabel queueText;
+        private System.Windows.Forms.Panel presetTools;
+        private Guna.UI.WinForms.GunaButton startPresetButton;
+        private Guna.UI.WinForms.GunaButton removePreset;
+        private Guna.UI.WinForms.GunaButton moveDown;
+        private Guna.UI.WinForms.GunaButton moveUp;
+        private Guna.UI.WinForms.GunaButton startNext;
+        private Guna.UI.WinForms.GunaButton commandButton;
+        private Guna.UI.WinForms.GunaButton clear;
+        private System.Windows.Forms.DataVisualization.Charting.Chart cpuUsage;
+        private Guna.UI.WinForms.GunaLabel cpuUsageLabel;
+        private Guna.UI.WinForms.GunaLabel cpuUsageText;
+        private Guna.UI.WinForms.GunaButton virtualBeats;
     }
 }
 

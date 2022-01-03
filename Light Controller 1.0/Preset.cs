@@ -8,15 +8,16 @@ using System.Web.Script.Serialization;
 
 namespace Light_Controller_1._0
 {
-    class Preset
+    public class Preset
     {
         public int colorSpeed;
         public int brightness;
-        public Color[][] colors;
+        public ColorHolder[][] colors;
         public bool fadeIn;
         public bool fadeOut;
         public bool barSync;
         public string name;
+        public int presetIndex = -1;
 
         public static readonly string filename = Path.GetDirectoryName
             (Assembly.GetEntryAssembly().Location) + "\\programData.json";
@@ -24,9 +25,23 @@ namespace Light_Controller_1._0
         public void Save()
         {
             List<Preset> list = GetLocalPresets();
-            list.Add(this);
+            if(presetIndex == - 1) presetIndex = list[list.Count - 1].presetIndex + 1;
+            list.Insert(presetIndex, this);
             string jsonString = new JavaScriptSerializer().Serialize(list);
             Console.WriteLine(jsonString);
+            using (StreamWriter file = File.CreateText(filename))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, jsonString);
+            }
+        }
+
+        public void Delete()
+        {
+            List<Preset> list = GetLocalPresets();
+            if (list[presetIndex].name.Equals(name)) list.RemoveAt(presetIndex);
+            string jsonString = new JavaScriptSerializer().Serialize(list);
+            Console.WriteLine(list.Contains(this));
             using (StreamWriter file = File.CreateText(filename))
             {
                 JsonSerializer serializer = new JsonSerializer();
@@ -43,6 +58,7 @@ namespace Light_Controller_1._0
                 Console.WriteLine("json:" + initialJson + "\n");
                 list = new JavaScriptSerializer().Deserialize<List<Preset>>(initialJson);
             }
+            for (int i = 0; i < list.Count; i++) list[i].presetIndex = i;
             return list;
         }
 
@@ -56,6 +72,19 @@ namespace Light_Controller_1._0
                 jsonString = jsonString.Remove(index, 1);
             }
             return jsonString;
+        }
+
+        public Preset Clone()
+        {
+            Preset preset = new Preset();
+            preset.barSync = barSync;
+            preset.colors = colors;
+            preset.brightness = brightness;
+            preset.colorSpeed = colorSpeed;
+            preset.fadeIn = fadeIn;
+            preset.fadeOut = fadeOut;
+            preset.name = name;
+            return preset;
         }
     }
 }

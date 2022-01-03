@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace Light_Controller_1._0
 {
@@ -16,8 +19,16 @@ namespace Light_Controller_1._0
         private Point dragCursorPoint;
         private Point dragFormPoint;
         private EventHandler resultAction;
-        private Color[][] colors;
+        private ColorHolder[][] colors;
+        private Stopwatch stopWatch;
+        private int beatsCount;
         public bool[] selectedLights = new bool[4];
+        private Preset preset;
+        private Label bpm;
+        private Action actionBeat;
+        private MainGUI mainGUI;
+        public static Guna.UI.WinForms.GunaLabel serialMonitor;
+        private Guna.UI.WinForms.GunaCheckBox autoScroll;
 
         public CustomForm()
         {
@@ -30,7 +41,12 @@ namespace Light_Controller_1._0
             MouseUp += Form_MouseUp;
             MouseMove += Form_MouseMove;
             Paint += OnPaint;
-            
+            SizeChanged += Size_Changed;
+        }
+
+        private void Size_Changed(object sender, EventArgs e)
+        {
+            RootTitle();
         }
 
         public string Title
@@ -54,12 +70,16 @@ namespace Light_Controller_1._0
 
         private void RootTitle()
         {
+            if (Controls.Contains(titleLabel)) Controls.Remove(titleLabel);
             titleLabel = new Label();
             titleLabel.Font = new Font(titleLabel.Font.Name, 16F);
             titleLabel.ForeColor = Color.White;
             titleLabel.Location = new Point(2, 2);
             titleLabel.TextAlign = ContentAlignment.MiddleCenter;
-            titleLabel.Width = Width;
+            titleLabel.Width = ClientRectangle.Width;
+            titleLabel.MouseDown += Form_MouseDown;
+            titleLabel.MouseMove += Form_MouseMove;
+            titleLabel.MouseUp += Form_MouseUp;
             Controls.Add(titleLabel);
         }
 
@@ -104,6 +124,7 @@ namespace Light_Controller_1._0
 
         private void CloseButton_Click(object sender, EventArgs e)
         {
+            serialMonitor = null;
             Close();
         }
 
@@ -167,11 +188,12 @@ namespace Light_Controller_1._0
 
         public void CreatePresetDialog(Preset preset)
         {
+            this.preset = preset;
             string[] speeds = { "2 bt", "1 bt", "1/2 bt", "1/4 bt", "1/8 bt" };
             string[] optionsNames = new string[] { "Name", "Color Speed", "Brightness" };
-            string[] defaultValues = new string[] { "Preset 1", speeds[preset.colorSpeed], 
+            string[] defaultValues = new string[] { preset.name, speeds[preset.colorSpeed],
                 preset.brightness + "" };
-            for(int i = 0; i < optionsNames.Length; i++)
+            for (int i = 0; i < optionsNames.Length; i++)
             {
                 Guna.UI.WinForms.GunaLabel label = new Guna.UI.WinForms.GunaLabel();
                 label.Text = optionsNames[i];
@@ -186,8 +208,8 @@ namespace Light_Controller_1._0
                 textBox.FocusedLineColor = Color.Blue;
                 Controls.Add(label);
                 Controls.Add(textBox);
-                CreateCheckBoxes(preset);
             }
+            CreateCheckBoxes(preset);
         }
 
         private void CreateCheckBoxes(Preset preset)
@@ -199,14 +221,14 @@ namespace Light_Controller_1._0
             fadeIn.ForeColor = Color.White;
             fadeIn.CheckedOnColor = Color.DodgerBlue;
             fadeIn.Text = "Fade In";
-            fadeIn.Tag = fadeIn.Text;
+            fadeIn.Tag = "Fade In";
             Guna.UI.WinForms.GunaCheckBox fadeOut = new Guna.UI.WinForms.GunaCheckBox();
             fadeOut.Checked = preset.fadeOut;
             fadeOut.Location = new Point(100, Height - 100);
             fadeOut.ForeColor = Color.White;
             fadeOut.CheckedOnColor = Color.DodgerBlue;
             fadeOut.Text = "Fade Out";
-            fadeOut.Tag = fadeOut.Text;
+            fadeOut.Tag = "Fade Out";
             Controls.Add(fadeIn);
             Controls.Add(fadeOut);
         }
@@ -215,8 +237,10 @@ namespace Light_Controller_1._0
         {
             Preset preset = new Preset();
             preset.colors = colors;
+            preset.presetIndex = this.preset.presetIndex;
             string[] speeds = { "2 bt", "1 bt", "1/2 bt", "1/4 bt", "1/8 bt" };
-            foreach (Control control in Controls) {
+            foreach (Control control in Controls)
+            {
                 try
                 {
                     if (control.Tag != null)
@@ -240,7 +264,8 @@ namespace Light_Controller_1._0
                                 break;
                         }
                     }
-                } catch
+                }
+                catch
                 {
                     control.ForeColor = Color.Red;
                     return null;
@@ -249,11 +274,107 @@ namespace Light_Controller_1._0
             return preset;
         }
 
+        public Preset GetShowedPreset()
+        {
+            return preset;
+        }
+
         private void checked_Change(object sender, EventArgs e)
         {
-            Guna.UI.WinForms.GunaCheckBox checkBox = (Guna.UI.WinForms.GunaCheckBox) sender;
+            Guna.UI.WinForms.GunaCheckBox checkBox = (Guna.UI.WinForms.GunaCheckBox)sender;
             int number = Convert.ToInt32(checkBox.Tag.ToString());
             selectedLights[number] = checkBox.Checked;
+        }
+
+        public void CreateSerialController()
+        {
+            Guna.UI.WinForms.GunaLineTextBox textBox = new Guna.UI.WinForms.GunaLineTextBox();
+            textBox.Location = new Point(10, 30);
+            textBox.Width = 450;
+            textBox.LineColor = Color.DodgerBlue;
+            textBox.FocusedLineColor = Color.Blue;
+            textBox.KeyDown += EnterClicked;
+            Controls.Add(textBox);
+            Panel panel = new Panel();
+            panel.Location = new Point(10, 70);
+            panel.Size = new Size(450, 200);
+            serialMonitor = new Guna.UI.WinForms.GunaLabel();
+            serialMonitor.ForeColor = Color.White;
+            serialMonitor.AutoSize = true;
+            serialMonitor.TextChanged += Serial_text_Changed;
+            panel.Controls.Add(serialMonitor);
+            panel.AutoScroll = true;
+            panel.MouseDown += Form_MouseDown;
+            panel.MouseMove += Form_MouseMove;
+            panel.MouseUp += Form_MouseUp;
+            autoScroll = new Guna.UI.WinForms.GunaCheckBox();
+            autoScroll.Checked = true;
+            autoScroll.Location = new Point(10, Height - 25);
+            autoScroll.ForeColor = Color.White;
+            autoScroll.CheckedOnColor = Color.DodgerBlue;
+            autoScroll.Text = "Auto Scroll";
+            Controls.Add(autoScroll);
+            serialMonitor.Text = "Serial Monitor Started At " + DateTime.Now.ToString("HH:mm:ss");
+            Controls.Add(panel);
+        }
+
+
+        private void Serial_text_Changed(object sender, EventArgs e)
+        {
+            if (autoScroll.Checked)
+            {
+                Panel panel = (Panel)serialMonitor.Parent;
+                int scroll = panel.VerticalScroll.Value;
+                Control control = new Control();
+                control.Location = new Point(0, serialMonitor.Height - scroll);
+                panel.Controls.Add(control);
+                Console.WriteLine("changed");
+                panel.ScrollControlIntoView(control);
+            }
+        }
+
+        void EnterClicked(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Guna.UI.WinForms.GunaLineTextBox textBox = (Guna.UI.WinForms.GunaLineTextBox)sender;
+                SerialPort port = MainGUI.port;
+                if ((port != null) && (port.IsOpen)) port.Write(textBox.Text);
+                textBox.Clear();
+                e.Handled = true;
+            }
+        }
+
+        internal void CreateBeatTapper(MainGUI gui)
+        {
+            Guna.UI.WinForms.GunaButton tap = new Guna.UI.WinForms.GunaButton();
+            tap.Text = "TAP";
+            tap.BaseColor = Color.DarkGray;
+            tap.OnHoverBaseColor = Color.LightGray;
+            tap.Location = new Point(100, 50);
+            tap.Size = new Size(100, 100);
+            tap.Image = null;
+            tap.Click += TapPressed;
+            tap.TextAlign = HorizontalAlignment.Center;
+            Controls.Add(tap);
+            bpm = new Label();
+            bpm.ForeColor = Color.White;
+            bpm.Location = new Point(120, 250);
+            Controls.Add(bpm);
+            mainGUI = gui;
+        }
+
+        private void TapPressed(object sender, EventArgs e)
+        {
+            beatsCount++;
+            if ((stopWatch == null)||(stopWatch.ElapsedMilliseconds / beatsCount > 900)) 
+                stopWatch = Stopwatch.StartNew();
+            else
+            {
+                int distance = Convert.ToInt32(stopWatch.ElapsedMilliseconds / beatsCount);
+                bpm.Text = "BPM: " + Math.Round(60d / distance * 1000d);
+                mainGUI.tapBeat(distance);
+            }
         }
     }
 }

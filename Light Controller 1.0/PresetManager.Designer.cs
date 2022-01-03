@@ -30,117 +30,25 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PresetManager));
             this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.presetPanel = new System.Windows.Forms.Panel();
-            this.presetValues = new Guna.UI.WinForms.GunaLabel();
-            this.presetName = new Guna.UI.WinForms.GunaLabel();
-            this.light4 = new Guna.UI.WinForms.GunaLabel();
-            this.light3 = new Guna.UI.WinForms.GunaLabel();
-            this.light2 = new Guna.UI.WinForms.GunaLabel();
-            this.light1 = new Guna.UI.WinForms.GunaLabel();
             this.maximize = new Guna.UI.WinForms.GunaLabel();
             this.minimize = new Guna.UI.WinForms.GunaLabel();
             this.close = new Guna.UI.WinForms.GunaLabel();
-            this.flowLayoutPanel.SuspendLayout();
-            this.presetPanel.SuspendLayout();
+            this.label1 = new System.Windows.Forms.Label();
+            this.startNow = new Guna.UI.WinForms.GunaButton();
+            this.addToQueue = new Guna.UI.WinForms.GunaButton();
+            this.deletePreset = new Guna.UI.WinForms.GunaButton();
+            this.editButton = new Guna.UI.WinForms.GunaButton();
+            this.newPresetButton = new Guna.UI.WinForms.GunaButton();
             this.SuspendLayout();
             // 
             // flowLayoutPanel
             // 
-            this.flowLayoutPanel.Controls.Add(this.presetPanel);
-            this.flowLayoutPanel.Location = new System.Drawing.Point(12, 12);
+            this.flowLayoutPanel.AutoScroll = true;
+            this.flowLayoutPanel.Location = new System.Drawing.Point(12, 54);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
-            this.flowLayoutPanel.Size = new System.Drawing.Size(456, 537);
+            this.flowLayoutPanel.Size = new System.Drawing.Size(860, 448);
             this.flowLayoutPanel.TabIndex = 0;
-            // 
-            // presetPanel
-            // 
-            this.presetPanel.Controls.Add(this.presetValues);
-            this.presetPanel.Controls.Add(this.presetName);
-            this.presetPanel.Controls.Add(this.light4);
-            this.presetPanel.Controls.Add(this.light3);
-            this.presetPanel.Controls.Add(this.light2);
-            this.presetPanel.Controls.Add(this.light1);
-            this.presetPanel.Location = new System.Drawing.Point(3, 3);
-            this.presetPanel.Name = "presetPanel";
-            this.presetPanel.Size = new System.Drawing.Size(267, 101);
-            this.presetPanel.TabIndex = 1;
-            // 
-            // presetValues
-            // 
-            this.presetValues.AutoSize = true;
-            this.presetValues.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.presetValues.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.presetValues.Location = new System.Drawing.Point(16, 25);
-            this.presetValues.Name = "presetValues";
-            this.presetValues.Size = new System.Drawing.Size(0, 15);
-            this.presetValues.TabIndex = 57;
-            // 
-            // presetName
-            // 
-            this.presetName.AutoSize = true;
-            this.presetName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.presetName.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.presetName.Location = new System.Drawing.Point(8, 6);
-            this.presetName.Name = "presetName";
-            this.presetName.Size = new System.Drawing.Size(82, 19);
-            this.presetName.TabIndex = 57;
-            this.presetName.Text = "No presets";
-            // 
-            // light4
-            // 
-            this.light4.AutoSize = true;
-            this.light4.BackColor = System.Drawing.Color.Transparent;
-            this.light4.Font = new System.Drawing.Font("Segoe UI", 50F);
-            this.light4.ForeColor = System.Drawing.Color.Black;
-            this.light4.Location = new System.Drawing.Point(156, 25);
-            this.light4.Margin = new System.Windows.Forms.Padding(0);
-            this.light4.Name = "light4";
-            this.light4.Size = new System.Drawing.Size(65, 89);
-            this.light4.TabIndex = 60;
-            this.light4.Text = "•";
-            this.light4.Visible = false;
-            // 
-            // light3
-            // 
-            this.light3.AutoSize = true;
-            this.light3.BackColor = System.Drawing.Color.Transparent;
-            this.light3.Font = new System.Drawing.Font("Segoe UI", 50F);
-            this.light3.ForeColor = System.Drawing.Color.Black;
-            this.light3.Location = new System.Drawing.Point(114, 25);
-            this.light3.Margin = new System.Windows.Forms.Padding(0);
-            this.light3.Name = "light3";
-            this.light3.Size = new System.Drawing.Size(65, 89);
-            this.light3.TabIndex = 59;
-            this.light3.Text = "•";
-            this.light3.Visible = false;
-            // 
-            // light2
-            // 
-            this.light2.AutoSize = true;
-            this.light2.BackColor = System.Drawing.Color.Transparent;
-            this.light2.Font = new System.Drawing.Font("Segoe UI", 50F);
-            this.light2.ForeColor = System.Drawing.Color.Black;
-            this.light2.Location = new System.Drawing.Point(74, 25);
-            this.light2.Margin = new System.Windows.Forms.Padding(0);
-            this.light2.Name = "light2";
-            this.light2.Size = new System.Drawing.Size(65, 89);
-            this.light2.TabIndex = 58;
-            this.light2.Text = "•";
-            this.light2.Visible = false;
-            // 
-            // light1
-            // 
-            this.light1.AutoSize = true;
-            this.light1.BackColor = System.Drawing.Color.Transparent;
-            this.light1.Font = new System.Drawing.Font("Segoe UI", 50F);
-            this.light1.ForeColor = System.Drawing.Color.Black;
-            this.light1.Location = new System.Drawing.Point(31, 25);
-            this.light1.Margin = new System.Windows.Forms.Padding(0);
-            this.light1.Name = "light1";
-            this.light1.Size = new System.Drawing.Size(65, 89);
-            this.light1.TabIndex = 57;
-            this.light1.Text = "•";
-            this.light1.Visible = false;
+            this.flowLayoutPanel.Click += new System.EventHandler(this.flowLayoutPanel_Click);
             // 
             // maximize
             // 
@@ -193,6 +101,147 @@
             this.close.MouseEnter += new System.EventHandler(this.ShowRed);
             this.close.MouseLeave += new System.EventHandler(this.HideRed);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(352, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(206, 31);
+            this.label1.TabIndex = 64;
+            this.label1.Text = "Preset Manager";
+            // 
+            // startNow
+            // 
+            this.startNow.AnimationHoverSpeed = 0.07F;
+            this.startNow.AnimationSpeed = 0.03F;
+            this.startNow.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.startNow.BorderColor = System.Drawing.Color.Black;
+            this.startNow.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.startNow.FocusedColor = System.Drawing.Color.Empty;
+            this.startNow.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.startNow.ForeColor = System.Drawing.Color.White;
+            this.startNow.Image = null;
+            this.startNow.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.startNow.ImageSize = new System.Drawing.Size(20, 20);
+            this.startNow.Location = new System.Drawing.Point(649, 514);
+            this.startNow.Name = "startNow";
+            this.startNow.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.startNow.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.startNow.OnHoverForeColor = System.Drawing.Color.White;
+            this.startNow.OnHoverImage = null;
+            this.startNow.OnPressedColor = System.Drawing.Color.Black;
+            this.startNow.Size = new System.Drawing.Size(94, 35);
+            this.startNow.TabIndex = 65;
+            this.startNow.Text = "Start Now";
+            this.startNow.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.startNow.Click += new System.EventHandler(this.startNow_Click);
+            // 
+            // addToQueue
+            // 
+            this.addToQueue.AnimationHoverSpeed = 0.07F;
+            this.addToQueue.AnimationSpeed = 0.03F;
+            this.addToQueue.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.addToQueue.BorderColor = System.Drawing.Color.Black;
+            this.addToQueue.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.addToQueue.FocusedColor = System.Drawing.Color.Empty;
+            this.addToQueue.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.addToQueue.ForeColor = System.Drawing.Color.White;
+            this.addToQueue.Image = null;
+            this.addToQueue.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.addToQueue.ImageSize = new System.Drawing.Size(20, 20);
+            this.addToQueue.Location = new System.Drawing.Point(749, 514);
+            this.addToQueue.Name = "addToQueue";
+            this.addToQueue.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.addToQueue.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.addToQueue.OnHoverForeColor = System.Drawing.Color.White;
+            this.addToQueue.OnHoverImage = null;
+            this.addToQueue.OnPressedColor = System.Drawing.Color.Black;
+            this.addToQueue.Size = new System.Drawing.Size(123, 35);
+            this.addToQueue.TabIndex = 66;
+            this.addToQueue.Text = "Add To Queue";
+            this.addToQueue.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.addToQueue.Click += new System.EventHandler(this.addToQueue_Click);
+            // 
+            // deletePreset
+            // 
+            this.deletePreset.AnimationHoverSpeed = 0.07F;
+            this.deletePreset.AnimationSpeed = 0.03F;
+            this.deletePreset.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.deletePreset.BorderColor = System.Drawing.Color.Black;
+            this.deletePreset.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.deletePreset.FocusedColor = System.Drawing.Color.Empty;
+            this.deletePreset.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.deletePreset.ForeColor = System.Drawing.Color.White;
+            this.deletePreset.Image = null;
+            this.deletePreset.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.deletePreset.ImageSize = new System.Drawing.Size(20, 20);
+            this.deletePreset.Location = new System.Drawing.Point(564, 514);
+            this.deletePreset.Name = "deletePreset";
+            this.deletePreset.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.deletePreset.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.deletePreset.OnHoverForeColor = System.Drawing.Color.White;
+            this.deletePreset.OnHoverImage = null;
+            this.deletePreset.OnPressedColor = System.Drawing.Color.Black;
+            this.deletePreset.Size = new System.Drawing.Size(79, 35);
+            this.deletePreset.TabIndex = 67;
+            this.deletePreset.Text = "Delete";
+            this.deletePreset.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.deletePreset.Click += new System.EventHandler(this.deletePreset_Click);
+            // 
+            // editButton
+            // 
+            this.editButton.AnimationHoverSpeed = 0.07F;
+            this.editButton.AnimationSpeed = 0.03F;
+            this.editButton.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.editButton.BorderColor = System.Drawing.Color.Black;
+            this.editButton.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.editButton.FocusedColor = System.Drawing.Color.Empty;
+            this.editButton.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.editButton.ForeColor = System.Drawing.Color.White;
+            this.editButton.Image = null;
+            this.editButton.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.editButton.ImageSize = new System.Drawing.Size(20, 20);
+            this.editButton.Location = new System.Drawing.Point(479, 514);
+            this.editButton.Name = "editButton";
+            this.editButton.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.editButton.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.editButton.OnHoverForeColor = System.Drawing.Color.White;
+            this.editButton.OnHoverImage = null;
+            this.editButton.OnPressedColor = System.Drawing.Color.Black;
+            this.editButton.Size = new System.Drawing.Size(79, 35);
+            this.editButton.TabIndex = 68;
+            this.editButton.Text = "Edit";
+            this.editButton.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.editButton.Click += new System.EventHandler(this.editButton_Click);
+            // 
+            // newPresetButton
+            // 
+            this.newPresetButton.AnimationHoverSpeed = 0.07F;
+            this.newPresetButton.AnimationSpeed = 0.03F;
+            this.newPresetButton.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.newPresetButton.BorderColor = System.Drawing.Color.Black;
+            this.newPresetButton.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.newPresetButton.FocusedColor = System.Drawing.Color.Empty;
+            this.newPresetButton.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.newPresetButton.ForeColor = System.Drawing.Color.White;
+            this.newPresetButton.Image = null;
+            this.newPresetButton.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.newPresetButton.ImageSize = new System.Drawing.Size(20, 20);
+            this.newPresetButton.Location = new System.Drawing.Point(12, 514);
+            this.newPresetButton.Name = "newPresetButton";
+            this.newPresetButton.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.newPresetButton.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.newPresetButton.OnHoverForeColor = System.Drawing.Color.White;
+            this.newPresetButton.OnHoverImage = null;
+            this.newPresetButton.OnPressedColor = System.Drawing.Color.Black;
+            this.newPresetButton.Size = new System.Drawing.Size(108, 35);
+            this.newPresetButton.TabIndex = 69;
+            this.newPresetButton.Text = "New Preset..";
+            this.newPresetButton.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.newPresetButton.Click += new System.EventHandler(this.newPresetButton_Click);
+            // 
             // PresetManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -200,6 +249,12 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(884, 561);
             this.ControlBox = false;
+            this.Controls.Add(this.newPresetButton);
+            this.Controls.Add(this.editButton);
+            this.Controls.Add(this.deletePreset);
+            this.Controls.Add(this.addToQueue);
+            this.Controls.Add(this.startNow);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.maximize);
             this.Controls.Add(this.flowLayoutPanel);
             this.Controls.Add(this.minimize);
@@ -209,28 +264,27 @@
             this.MinimizeBox = false;
             this.Name = "PresetManager";
             this.Text = "Preset Manager";
+            this.Activated += new System.EventHandler(this.PresetManager_Activated);
+            this.Deactivate += new System.EventHandler(this.PresetManager_Deactivate);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
-            this.flowLayoutPanel.ResumeLayout(false);
-            this.presetPanel.ResumeLayout(false);
-            this.presetPanel.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel;
-        private System.Windows.Forms.Panel presetPanel;
-        private Guna.UI.WinForms.GunaLabel presetValues;
-        private Guna.UI.WinForms.GunaLabel presetName;
-        private Guna.UI.WinForms.GunaLabel light4;
-        private Guna.UI.WinForms.GunaLabel light3;
-        private Guna.UI.WinForms.GunaLabel light2;
-        private Guna.UI.WinForms.GunaLabel light1;
         private Guna.UI.WinForms.GunaLabel maximize;
         private Guna.UI.WinForms.GunaLabel minimize;
         private Guna.UI.WinForms.GunaLabel close;
+        private System.Windows.Forms.Label label1;
+        private Guna.UI.WinForms.GunaButton startNow;
+        private Guna.UI.WinForms.GunaButton addToQueue;
+        private Guna.UI.WinForms.GunaButton deletePreset;
+        private Guna.UI.WinForms.GunaButton editButton;
+        private Guna.UI.WinForms.GunaButton newPresetButton;
     }
 }
