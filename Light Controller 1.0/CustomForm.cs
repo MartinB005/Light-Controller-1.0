@@ -87,8 +87,8 @@ namespace Light_Controller_1._0
         {
             Guna.UI.WinForms.GunaButton ok = new Guna.UI.WinForms.GunaButton();
             ok.Text = "OK";
-            ok.BaseColor = Color.DodgerBlue;
-            ok.OnHoverBaseColor = Color.LightSkyBlue;
+            ok.BaseColor = Color.FromArgb(50, 80, 130);
+            ok.OnHoverBaseColor = Color.FromArgb(40, 70, 120);
             ok.Location = new Point(Width - 60, Height - ok.Height);
             ok.Size = new Size(55, 25);
             ok.Image = null;
@@ -97,8 +97,8 @@ namespace Light_Controller_1._0
             Controls.Add(ok);
             Guna.UI.WinForms.GunaButton cancel = new Guna.UI.WinForms.GunaButton();
             cancel.Text = "CANCEL";
-            cancel.BaseColor = Color.DodgerBlue;
-            cancel.OnHoverBaseColor = Color.LightSkyBlue;
+            cancel.BaseColor = Color.FromArgb(50, 80, 130);
+            cancel.OnHoverBaseColor = Color.FromArgb(40, 70, 120);
             cancel.Location = new Point(Width - ok.Width - 65, Height - cancel.Height);
             cancel.Size = new Size(55, 25);
             cancel.Image = null;
@@ -131,7 +131,7 @@ namespace Light_Controller_1._0
         private void CloseButton_Enter(object sender, EventArgs e)
         {
             Label label = (Label)sender;
-            label.BackColor = Color.Red;
+            label.BackColor = Color.FromArgb(150, 255, 0, 0);
         }
 
         private void CloseButton_Leave(object sender, EventArgs e)
@@ -181,7 +181,7 @@ namespace Light_Controller_1._0
                 checkBox.Tag = i;
                 checkBox.Checked = true;
                 checkBox.CheckedChanged += checked_Change;
-                checkBox.CheckedOnColor = Color.DodgerBlue;
+                checkBox.CheckedOnColor = Color.FromArgb(50, 80, 130);
                 Controls.Add(checkBox);
             }
         }
@@ -204,7 +204,7 @@ namespace Light_Controller_1._0
                 textBox.Location = new Point(10, i * 60 + 50);
                 textBox.Text = defaultValues[i];
                 textBox.Tag = optionsNames[i];
-                textBox.LineColor = Color.DodgerBlue;
+                textBox.LineColor = Color.FromArgb(50, 80, 130);
                 textBox.FocusedLineColor = Color.Blue;
                 Controls.Add(label);
                 Controls.Add(textBox);
@@ -219,14 +219,14 @@ namespace Light_Controller_1._0
             fadeIn.Checked = preset.fadeIn;
             fadeIn.Location = new Point(10, Height - 100);
             fadeIn.ForeColor = Color.White;
-            fadeIn.CheckedOnColor = Color.DodgerBlue;
+            fadeIn.CheckedOnColor = Color.FromArgb(50, 80, 130);
             fadeIn.Text = "Fade In";
             fadeIn.Tag = "Fade In";
             Guna.UI.WinForms.GunaCheckBox fadeOut = new Guna.UI.WinForms.GunaCheckBox();
             fadeOut.Checked = preset.fadeOut;
             fadeOut.Location = new Point(100, Height - 100);
             fadeOut.ForeColor = Color.White;
-            fadeOut.CheckedOnColor = Color.DodgerBlue;
+            fadeOut.CheckedOnColor = Color.FromArgb(50, 80, 130);
             fadeOut.Text = "Fade Out";
             fadeOut.Tag = "Fade Out";
             Controls.Add(fadeIn);
@@ -291,7 +291,7 @@ namespace Light_Controller_1._0
             Guna.UI.WinForms.GunaLineTextBox textBox = new Guna.UI.WinForms.GunaLineTextBox();
             textBox.Location = new Point(10, 30);
             textBox.Width = 450;
-            textBox.LineColor = Color.DodgerBlue;
+            textBox.LineColor = Color.FromArgb(50, 80, 130);
             textBox.FocusedLineColor = Color.Blue;
             textBox.KeyDown += EnterClicked;
             Controls.Add(textBox);
@@ -311,7 +311,7 @@ namespace Light_Controller_1._0
             autoScroll.Checked = true;
             autoScroll.Location = new Point(10, Height - 25);
             autoScroll.ForeColor = Color.White;
-            autoScroll.CheckedOnColor = Color.DodgerBlue;
+            autoScroll.CheckedOnColor = Color.FromArgb(50, 80, 130);
             autoScroll.Text = "Auto Scroll";
             Controls.Add(autoScroll);
             serialMonitor.Text = "Serial Monitor Started At " + DateTime.Now.ToString("HH:mm:ss");
@@ -375,6 +375,19 @@ namespace Light_Controller_1._0
                 bpm.Text = "BPM: " + Math.Round(60d / distance * 1000d);
                 mainGUI.tapBeat(distance);
             }
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // CustomForm
+            // 
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(44)))), ((int)(((byte)(44)))));
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "CustomForm";
+            this.ResumeLayout(false);
+
         }
     }
 }

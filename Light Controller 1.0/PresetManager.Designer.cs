@@ -116,8 +116,10 @@
             // 
             this.startNow.AnimationHoverSpeed = 0.07F;
             this.startNow.AnimationSpeed = 0.03F;
-            this.startNow.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.startNow.BackColor = System.Drawing.Color.Transparent;
+            this.startNow.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(80)))), ((int)(((byte)(130)))));
             this.startNow.BorderColor = System.Drawing.Color.Black;
+            this.startNow.Cursor = System.Windows.Forms.Cursors.Hand;
             this.startNow.DialogResult = System.Windows.Forms.DialogResult.None;
             this.startNow.FocusedColor = System.Drawing.Color.Empty;
             this.startNow.Font = new System.Drawing.Font("Segoe UI", 11F);
@@ -127,11 +129,12 @@
             this.startNow.ImageSize = new System.Drawing.Size(20, 20);
             this.startNow.Location = new System.Drawing.Point(649, 514);
             this.startNow.Name = "startNow";
-            this.startNow.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.startNow.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(70)))), ((int)(((byte)(120)))));
             this.startNow.OnHoverBorderColor = System.Drawing.Color.Black;
             this.startNow.OnHoverForeColor = System.Drawing.Color.White;
             this.startNow.OnHoverImage = null;
             this.startNow.OnPressedColor = System.Drawing.Color.Black;
+            this.startNow.Radius = 10;
             this.startNow.Size = new System.Drawing.Size(94, 35);
             this.startNow.TabIndex = 65;
             this.startNow.Text = "Start Now";
@@ -142,8 +145,10 @@
             // 
             this.addToQueue.AnimationHoverSpeed = 0.07F;
             this.addToQueue.AnimationSpeed = 0.03F;
-            this.addToQueue.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.addToQueue.BackColor = System.Drawing.Color.Transparent;
+            this.addToQueue.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(80)))), ((int)(((byte)(130)))));
             this.addToQueue.BorderColor = System.Drawing.Color.Black;
+            this.addToQueue.Cursor = System.Windows.Forms.Cursors.Hand;
             this.addToQueue.DialogResult = System.Windows.Forms.DialogResult.None;
             this.addToQueue.FocusedColor = System.Drawing.Color.Empty;
             this.addToQueue.Font = new System.Drawing.Font("Segoe UI", 11F);
@@ -153,11 +158,12 @@
             this.addToQueue.ImageSize = new System.Drawing.Size(20, 20);
             this.addToQueue.Location = new System.Drawing.Point(749, 514);
             this.addToQueue.Name = "addToQueue";
-            this.addToQueue.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.addToQueue.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(70)))), ((int)(((byte)(120)))));
             this.addToQueue.OnHoverBorderColor = System.Drawing.Color.Black;
             this.addToQueue.OnHoverForeColor = System.Drawing.Color.White;
             this.addToQueue.OnHoverImage = null;
             this.addToQueue.OnPressedColor = System.Drawing.Color.Black;
+            this.addToQueue.Radius = 10;
             this.addToQueue.Size = new System.Drawing.Size(123, 35);
             this.addToQueue.TabIndex = 66;
             this.addToQueue.Text = "Add To Queue";
@@ -168,8 +174,10 @@
             // 
             this.deletePreset.AnimationHoverSpeed = 0.07F;
             this.deletePreset.AnimationSpeed = 0.03F;
-            this.deletePreset.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.deletePreset.BackColor = System.Drawing.Color.Transparent;
+            this.deletePreset.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(80)))), ((int)(((byte)(130)))));
             this.deletePreset.BorderColor = System.Drawing.Color.Black;
+            this.deletePreset.Cursor = System.Windows.Forms.Cursors.Hand;
             this.deletePreset.DialogResult = System.Windows.Forms.DialogResult.None;
             this.deletePreset.FocusedColor = System.Drawing.Color.Empty;
             this.deletePreset.Font = new System.Drawing.Font("Segoe UI", 11F);
@@ -179,11 +187,12 @@
             this.deletePreset.ImageSize = new System.Drawing.Size(20, 20);
             this.deletePreset.Location = new System.Drawing.Point(564, 514);
             this.deletePreset.Name = "deletePreset";
-            this.deletePreset.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.deletePreset.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(70)))), ((int)(((byte)(120)))));
             this.deletePreset.OnHoverBorderColor = System.Drawing.Color.Black;
             this.deletePreset.OnHoverForeColor = System.Drawing.Color.White;
             this.deletePreset.OnHoverImage = null;
             this.deletePreset.OnPressedColor = System.Drawing.Color.Black;
+            this.deletePreset.Radius = 10;
             this.deletePreset.Size = new System.Drawing.Size(79, 35);
             this.deletePreset.TabIndex = 67;
             this.deletePreset.Text = "Delete";
@@ -194,8 +203,10 @@
             // 
             this.editButton.AnimationHoverSpeed = 0.07F;
             this.editButton.AnimationSpeed = 0.03F;
-            this.editButton.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.editButton.BackColor = System.Drawing.Color.Transparent;
+            this.editButton.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(80)))), ((int)(((byte)(130)))));
             this.editButton.BorderColor = System.Drawing.Color.Black;
+            this.editButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.editButton.DialogResult = System.Windows.Forms.DialogResult.None;
             this.editButton.FocusedColor = System.Drawing.Color.Empty;
             this.editButton.Font = new System.Drawing.Font("Segoe UI", 11F);
@@ -205,11 +216,12 @@
             this.editButton.ImageSize = new System.Drawing.Size(20, 20);
             this.editButton.Location = new System.Drawing.Point(479, 514);
             this.editButton.Name = "editButton";
-            this.editButton.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.editButton.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(70)))), ((int)(((byte)(120)))));
             this.editButton.OnHoverBorderColor = System.Drawing.Color.Black;
             this.editButton.OnHoverForeColor = System.Drawing.Color.White;
             this.editButton.OnHoverImage = null;
             this.editButton.OnPressedColor = System.Drawing.Color.Black;
+            this.editButton.Radius = 10;
             this.editButton.Size = new System.Drawing.Size(79, 35);
             this.editButton.TabIndex = 68;
             this.editButton.Text = "Edit";
@@ -220,8 +232,10 @@
             // 
             this.newPresetButton.AnimationHoverSpeed = 0.07F;
             this.newPresetButton.AnimationSpeed = 0.03F;
-            this.newPresetButton.BaseColor = System.Drawing.Color.DodgerBlue;
+            this.newPresetButton.BackColor = System.Drawing.Color.Transparent;
+            this.newPresetButton.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(80)))), ((int)(((byte)(130)))));
             this.newPresetButton.BorderColor = System.Drawing.Color.Black;
+            this.newPresetButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.newPresetButton.DialogResult = System.Windows.Forms.DialogResult.None;
             this.newPresetButton.FocusedColor = System.Drawing.Color.Empty;
             this.newPresetButton.Font = new System.Drawing.Font("Segoe UI", 11F);
@@ -231,11 +245,12 @@
             this.newPresetButton.ImageSize = new System.Drawing.Size(20, 20);
             this.newPresetButton.Location = new System.Drawing.Point(12, 514);
             this.newPresetButton.Name = "newPresetButton";
-            this.newPresetButton.OnHoverBaseColor = System.Drawing.Color.LightSkyBlue;
+            this.newPresetButton.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(70)))), ((int)(((byte)(120)))));
             this.newPresetButton.OnHoverBorderColor = System.Drawing.Color.Black;
             this.newPresetButton.OnHoverForeColor = System.Drawing.Color.White;
             this.newPresetButton.OnHoverImage = null;
             this.newPresetButton.OnPressedColor = System.Drawing.Color.Black;
+            this.newPresetButton.Radius = 10;
             this.newPresetButton.Size = new System.Drawing.Size(108, 35);
             this.newPresetButton.TabIndex = 69;
             this.newPresetButton.Text = "New Preset..";
@@ -246,7 +261,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(44)))), ((int)(((byte)(44)))));
             this.ClientSize = new System.Drawing.Size(884, 561);
             this.ControlBox = false;
             this.Controls.Add(this.newPresetButton);

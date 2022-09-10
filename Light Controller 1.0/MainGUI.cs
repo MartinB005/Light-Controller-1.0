@@ -29,6 +29,10 @@ namespace Light_Controller_1._0
         private int selectedPreset;
         private int[][] colorNumber;
         private int virtualDistance;
+        private int detectorPosition;
+        private int counterSpacing;
+        private int clipWidth;
+        private bool virtualDjIsOnBackground;
         private bool playingDesk1;
         private bool disableChanging;
         private bool dragging;
@@ -37,19 +41,29 @@ namespace Light_Controller_1._0
         private bool locked;
         private bool sendingPresetData;
         private bool virtualBeatsActive;
+        private bool checkingVirtualDJ;
+        private bool[] motorsChecked;
         private Point dragCursorPoint;
         private Point dragFormPoint;
         private Stopwatch beat8Time;
         private Stopwatch beatComparer;
+        private System.Timers.Timer virtualBeatTimer;
         private PerformanceCounter cpuWatcher;
         private PerformanceCounter cpuController;
         private PerformanceCounter memoryUsage;
         private PresetManager presetManager;
         private CustomForm newPresetForm;
         public List<Preset> queue;
+        private Control selectedControl;
+        private Control selectedColor;
         private Preset playingPreset;
         public static SerialPort port;
         private String keyboardNumber = "";
+        private List<Control> selectableControls;
+        private List<Control> allColors;
+        private ColorPicker colorPicker;
+        private bool colorSelection;
+        private List<Color> usedColors;
 
         public MainGUI()
         {
@@ -60,11 +74,36 @@ namespace Light_Controller_1._0
             cpuController = new PerformanceCounter("Process", "% Processor Time", "Light Controller 1.0");
             memoryUsage = new PerformanceCounter("Memory", "Available MBytes");
             FormBorderStyle = FormBorderStyle.None;
+            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            //detectorPosition = Convert.ToInt32(Math.Round(screenWidth * 0.47));
+            detectorPosition = 590;
+            clipWidth = screenWidth / 12;
+            counterSpacing = screenWidth / 60;
             RootColorButtons();
+            InitMotors();
             WatchCpuUsage(100, true);
             Paint += OnPaint;
             queue = new List<Preset>();
+            Label[] lights = { light1, light2, light3, light4 };
+            loadColorSelection();
+            foreach(Label light in lights) light.BackColor = Color.Transparent;
+            selectableControls = new();
+            foreach (Control control in Controls)
+                if (control is Guna.UI.WinForms.GunaButton || control is Guna.UI.WinForms.GunaCheckBox)
+                    selectableControls.Add(control);
         }
+
+        private void loadColorSelection()
+        {
+            allColors = new();
+            foreach (Control control in panel1.Controls)
+            {
+                Panel panel = (Panel)control;
+                foreach (Control colorButton in panel.Controls) allColors.Add(colorButton);
+            }
+            foreach (Control control in colorPanel.Controls) allColors.Add(control);
+        }
+
 
         private void portSelection_Click(object sender, EventArgs e)
         {
@@ -80,11 +119,40 @@ namespace Light_Controller_1._0
             e.Graphics.DrawRectangle(Pens.Black, rectangle);
         }
 
+        private void showBeatCounterDetector(object sender, EventArgs e)
+        {
+            Form form = new Form();
+            form.Text = "Detecting beats Window";
+            form.TransparencyKey = Color.Turquoise;
+            form.Show();
+            form.Top = -30;
+            form.Size = new Size(clipWidth, 100);
+            var bmp = new Bitmap(clipWidth, 30, PixelFormat.Format32bppArgb);
+            using (Graphics graphics = Graphics.FromImage(bmp))
+            {
+                graphics.CopyFromScreen(detectorPosition, 0, 0, 0, new Size(bmp.Width, bmp.Height),
+                    CopyPixelOperation.SourceCopy);
+                form.BackgroundImage = bmp;
+            }
+            form.Left = detectorPosition;
+            for(int i = 0; i < 8; i++)
+            {
+                Label label = new();
+                label.BackColor = Color.White;
+                label.Left = 20 + i % 4 * counterSpacing;
+                label.Top = i < 4 ? 9 : 18;
+                label.Width = 5;
+                label.Height = 5;
+                label.ForeColor = Color.White;
+                form.Controls.Add(label);
+            }
+        }
+
         private void RootColorButtons()
         {
             bool[] lights = new bool[4];
             for (int j = 0; j < 4; j++) lights[j] = true;
-            for (int i = 0; i < 4; i++) CreateColorGroup(lights);
+            for (int i = 0; i < 2; i++) CreateColorGroup(lights);
         }
 
         private Panel CreateColorGroup(bool[] lights)
@@ -105,6 +173,7 @@ namespace Light_Controller_1._0
             panel1.Controls.Add(linePanel);
             linePanel.Controls.Add(NewRemovingButton());
             colorCount++;
+            UpdateUsedColors();
             return linePanel;
         }
 
@@ -118,7 +187,8 @@ namespace Light_Controller_1._0
             button.Tag = number;
             button.Text = "▬";
             button.ForeColor = Color.Black;
-            button.BaseColor = Color.Silver;
+            button.BaseColor = Color.FromArgb(80, 80, 80);
+            button.OnHoverBaseColor = Color.FromArgb(60, 60, 60);
             button.Image = null;
             button.TextAlign = HorizontalAlignment.Center;
             button.OnHoverForeColor = button.ForeColor;
@@ -131,7 +201,7 @@ namespace Light_Controller_1._0
             Guna.UI.WinForms.GunaButton button = new Guna.UI.WinForms.GunaButton();
             button.Location = new Point(265, 10);
             button.Size = new Size(20, 20);
-            button.BaseColor = Color.DodgerBlue;
+            button.BaseColor = Color.FromArgb(50, 80, 130);
             button.TextAlign = HorizontalAlignment.Center;
             button.Text = "-";
             button.Tag = "Remove";
@@ -156,7 +226,7 @@ namespace Light_Controller_1._0
                 port.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
                 port.Open();
                 if (!connectedBefore) port.Close();
-                ShowOnDisplay("Connected to port " + selectedPort);
+                ShowOnDisplay("port " + selectedPort + " is available");
             }
             catch
             {
@@ -184,7 +254,7 @@ namespace Light_Controller_1._0
 
         private void ShowRed(object sender, EventArgs e)
         {
-            close.BackColor = Color.Red;
+            close.BackColor = Color.FromArgb(150, 255, 0, 0);
         }
 
         private void HideRed(object sender, EventArgs e)
@@ -194,7 +264,7 @@ namespace Light_Controller_1._0
 
         private void ShowMinimizeBlue(object sender, EventArgs e)
         {
-            minimize.BackColor = Color.LightSlateGray;
+            minimize.BackColor = Color.FromArgb(50, 255, 255, 255);
         }
 
         private void HideMinimizeBlue(object sender, EventArgs e)
@@ -205,7 +275,7 @@ namespace Light_Controller_1._0
 
         private void ShowMaximizeBlue(object sender, EventArgs e)
         {
-            maximize.BackColor = Color.LightSlateGray;
+            maximize.BackColor = Color.FromArgb(50, 255, 255, 255);
         }
 
         private void HideMaximizeBlue(object sender, EventArgs e)
@@ -215,23 +285,26 @@ namespace Light_Controller_1._0
 
         private void colorButtonClick(object sender, EventArgs e)
         {
-            colorSelection(sender);
+            ColorSelection(sender);
         }
 
-        private async void colorSelection(object sender)
+        private async void ColorSelection(object sender)
         {
             Guna.UI.WinForms.GunaButton button = (Guna.UI.WinForms.GunaButton)sender;
             string tag = button.Tag.ToString();
             string parentTag = button.Parent.Tag.ToString();
-            ColorDialog dialog = new ColorDialog();
-            dialog.Color = button.ForeColor;
-            await Task.Delay(5);
-            if (dialog.ShowDialog() == DialogResult.OK)
+            colorPicker = new ColorPicker();
+            colorPicker.CurrentColor = button.ForeColor;
+            colorPicker.Show();
+            colorPicker.OnResult = () =>
             {
-                Color color = dialog.Color;
+                colorPicker.Close();
+                Color color = colorPicker.SelectedColor;
                 button.ForeColor = button.OnHoverForeColor = color;
+                button.OnHoverForeColor = color;
                 SendToArduino("setColor", tag + "," + parentTag + ">" + color.R + "/" + color.G + "/" + color.B);
-            }
+                UpdateUsedColors();
+            };
         }
 
         private void TrackBar1_Scroll(object sender, ScrollEventArgs e)
@@ -273,10 +346,35 @@ namespace Light_Controller_1._0
             progressBar.ProgressMaxColor = Color.FromArgb(colorR, colorG, colorB);
         }
 
-        private void TrackBar3_Scroll(object sender, ScrollEventArgs e)
+        private void xMotor_Scroll(object sender, ScrollEventArgs e)
         {
-            colorB = Convert.ToInt32(e.NewValue * 2.55);
-            progressBar.ProgressMaxColor = Color.FromArgb(colorR, colorG, colorB);
+            moveMotor(true, e.NewValue);
+        }
+
+        private void yMotor_Scroll(object sender, ScrollEventArgs e)
+        {
+            moveMotor(false, e.NewValue);  
+        }
+
+        private void moveMotor(bool x, int value)
+        {
+            value = Convert.ToInt32(value * 1.8);
+            string lights = "";
+            string lightsData = "";
+            for (int i = 0; i < motorsChecked.Length; i++)
+            {
+                if (motorsChecked[i]) lights += Convert.ToString(i + 1) + ", ";
+                lightsData += (motorsChecked[i] ? "1" : "0") + "|";
+            }
+            if (lights.Length > 0)
+            {
+                Console.WriteLine(lightsData + ">" + value);
+                SendToArduino(x ? "motorX" : "motorY", lightsData + ">" + value);
+                lights = "Light " + lights;
+                lights = lights.Remove(lights.Length - 2, 1);
+            }
+            else lights = "(No lights selected) ";
+            ShowOnDisplay(String.Format("{0} Motor {1}: {2}", lights, x ? "X" : "Y", value));
         }
 
         private void brigthnessTrackBar_Scroll(object sender, ScrollEventArgs e)
@@ -317,6 +415,11 @@ namespace Light_Controller_1._0
                 var ts = new ThreadStart(BackgroundMethod);
                 var backgroundThread = new Thread(ts);
                 backgroundThread.Start();
+            }
+            else if (virtualBeatTimer != null)
+            {
+                virtualBeatTimer.Stop();
+                virtualBeatTimer.Enabled = false;
             }
         }
 
@@ -430,6 +533,7 @@ namespace Light_Controller_1._0
         {
             anotherDeskBeats = 0;
             disableChanging = true;
+            totalBeats = 0;
             playingDesk1 = !playingDesk1;
             Label[] labels = new Label[] { beat1, beat2, beat3, beat4 };
             foreach (Label label in labels)
@@ -464,12 +568,14 @@ namespace Light_Controller_1._0
         {
             try
             {
-                var bmp = new Bitmap(100, 30, PixelFormat.Format32bppArgb);
+
+                var bmp = new Bitmap(clipWidth, 30, PixelFormat.Format32bppArgb);
                 using (Graphics graphics = Graphics.FromImage(bmp))
                 {
-                    graphics.CopyFromScreen(590, 0, 0, 0, new Size(bmp.Width, bmp.Height),
+                    graphics.CopyFromScreen(detectorPosition, 0, 0, 0, new Size(bmp.Width, bmp.Height),
                         CopyPixelOperation.SourceCopy);
-                    detectBeat(bmp);
+                    if(!virtualDjIsOnBackground) detectBeat(bmp);
+                    CaptureColor(bmp);
                 }
             }
             catch
@@ -483,16 +589,15 @@ namespace Light_Controller_1._0
         {
             int posY = playingDesk1 ? 10 : 20;
             Label[] beatCounter = new Label[] { beat1, beat2, beat3, beat4 };
-            int x = 0;
+            int x = 20;
             foreach (Label label in beatCounter)
             {
-                x += 20;
                 Color pixel = bitmap.GetPixel(x, posY);
                 int pixelColor = playingDesk1 ? pixel.B : pixel.R;
                 label.Invoke(new Action(() => label.Visible = pixelColor > 100));
                 if (pixelColor > 100)
                 {
-                    int beat = x / 20;
+                    int beat = (x / counterSpacing + 1) % 4 + 1;
                     if (this.beat != beat)
                     {
                         onBeat();
@@ -500,21 +605,25 @@ namespace Light_Controller_1._0
                         virtualBeatsActive = false;
                     }
                 }
+                x += counterSpacing;
             }
             if (auto.Checked) CheckAnotherDesk(bitmap);
             else if (disableChanging) disableChanging = false;
         }
 
-        private void onBeat()
+        private async void onBeat()
         {
+            CheckVirtualDJ();
             totalBeats++;
+            await Task.Delay(90);
             SendToArduino("beat", Convert.ToString(beat));
             gunaLabel1.Invoke(new Action(() => gunaLabel1.Text = Convert.ToString(beat)));
             QueueNextBeat();
             if (presetManager != null) presetManager.nextBeat();
-            if (totalBeats % 8 == 0)
+            Console.WriteLine(beatDistance);
+            if (totalBeats % 8 == 0 || (totalBeats > 0 && totalBeats < 8))
             {
-                beatDistance = Convert.ToInt32(beat8Time.ElapsedMilliseconds / 8);
+                beatDistance = Convert.ToInt32(beat8Time.ElapsedMilliseconds / (totalBeats < 8 ? totalBeats : 8));
                 if (beatDistance > 300)
                 {
                     double fullBpm = 60d / (beat8Time.ElapsedMilliseconds / 8) * 1000;
@@ -522,9 +631,63 @@ namespace Light_Controller_1._0
                     beat2.Invoke(new Action(() => bpm.Text = "BPM : " + bpmValue));
                     beat8Time = Stopwatch.StartNew();
                     SendToArduino("beatDistance", Convert.ToString(beatDistance));
+                    Console.WriteLine("beatDistance " + beatDistance);
                 }
-                else ShowOnDisplay("Please Open Virtual DJ");
+                else if(totalBeats > 8) ShowOnDisplay("Please Open Virtual DJ");
             }
+        }
+
+        private void CaptureColor(Bitmap bmp)
+        {
+            Color realColor = bmp.GetPixel(bmp.Width - 1, 10);
+            Color appColor = ColorTranslator.FromHtml("#36383b");
+            virtualDjIsOnBackground = realColor != appColor;
+        }
+
+        private async void CheckVirtualDJ()
+        {
+            if (beatDistance > 100 && !checkingVirtualDJ)
+            {
+                checkingVirtualDJ = true;
+                bool wasOnBackground = virtualDjIsOnBackground;
+                await Task.Delay(beatDistance - 50);
+                Console.WriteLine("vb " + virtualDjIsOnBackground);
+
+                if (!wasOnBackground && virtualDjIsOnBackground)
+                {
+                    continueWithVirtualBeats();
+                }
+                checkingVirtualDJ = false;
+            }
+            if (!virtualDjIsOnBackground && virtualBeatTimer != null && virtualBeatTimer.Enabled)
+            {
+                virtualBeatTimer.Stop();
+                virtualBeatTimer.Enabled = false;
+            }
+        }
+
+        private void continueWithVirtualBeats()
+        {
+            OnTimedEvent(null, null);
+            ShowOnDisplay("Virtual Beats Active (distance " + beatDistance + ")");
+            virtualBeatTimer = new();
+            virtualBeatTimer.Interval = beatDistance;
+            virtualBeatTimer.Elapsed += OnTimedEvent;
+            virtualBeatTimer.AutoReset = true;
+            virtualBeatTimer.Enabled = true;
+        }
+
+        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            Label[] beatCounter = new Label[] { beat1, beat2, beat3, beat4 };
+            Console.WriteLine("virtualBeat: " + beat);
+            for (int i = 1; i <= 4; i++)
+            {
+                Label label = beatCounter[i - 1];
+                label.Invoke(new Action(() => label.Visible = beat == i));
+            }
+            onBeat();
+            beat = beat % 4 + 1;
         }
 
         public void tapBeat(int distance)
@@ -618,12 +781,10 @@ namespace Light_Controller_1._0
                     if (port.IsOpen) SendToArduino("-disconnect:", "true");
                     if (port.IsOpen) port.Close();
                     else port.Open();
-                    connect.Text = port.IsOpen ? "DISCONNECT" : "CONNECT";
-                    connect.Width = port.IsOpen ? 155 : 125;
-                    connect.BackColor = port.IsOpen ? Color.LightGray : Color.DodgerBlue;
-                    if (port.IsOpen) SendAllColors(true);
+                    connectButton.Text = port.IsOpen ? "DISCONNECT" : "CONNECT";
                     if (beatDistance > 300)
                         SendToArduino("beatDistance", Convert.ToString(beatDistance));
+                    if (port.IsOpen) SendAllColors(true);
                 }
                 else MessageBox.Show("Please select a port",
                     "", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -639,7 +800,24 @@ namespace Light_Controller_1._0
             if ((!sendingPresetData) || (key.Contains("setColor")) || (key.Equals("commands")) || (key.Equals("colorCount")))
             {
                 if ((port != null) && (port.IsOpen))
-                    port.Write("-" + key + ":" + data + ">");
+                {
+                    SendCommand(key, data);
+                }
+            }
+        }
+
+        private void SendCommand(string key, string data)
+        {
+            try
+            {
+                port.Write("-" + key + ":" + data);
+            }
+            catch
+            {
+                port.Close();
+                connectButton.Text = "CONNECT";
+                MessageBox.Show("Error writing to serial port",
+            "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -654,24 +832,35 @@ namespace Light_Controller_1._0
                 switch (key)
                 {
                     case "audio":
-                        progressBar.Value = Convert.ToInt32(value);
+                        ShowAudio(Convert.ToInt32(value));
                         break;
                     case "display":
                         if (ScrollTrackBar(value))
                             ShowOnDisplay(value);
                         break;
                     case "lights":
-                        int number = Convert.ToInt32(value.Substring(0, value.IndexOf(">")));
-                        UpdateLightView(number, GetLightColor(value));
+                        UpdateLightView(value);
                         break;
                     case "selection":
                         setSelection(Convert.ToInt32(value));
+                        break;
+                    case "colorSelection":
+                        SelectColor(Convert.ToInt32(value));
                         break;
                     case "button":
                         buttonPress(value);
                         break;
                     case "keyboard":
                         onKeyPress(value.Substring(0, 1));
+                        break;
+                    case "x":
+                        setPositionX(Convert.ToInt32(value));
+                        break;
+                    case "y":
+                        setPositionY(Convert.ToInt32(value));
+                        break;
+                    case "color":
+                        ChangeUsedColor(value);
                         break;
                     default:
                         Console.WriteLine(key);
@@ -684,6 +873,26 @@ namespace Light_Controller_1._0
             catch
             {
                 Console.WriteLine("error: " + e.ToString());
+            }
+        }
+
+        private void ShowAudio(int value)
+        {
+            if(value > progressBar.Value)
+            {
+                progressBar.Value = value;
+                DropProgress(value);
+            }
+        }
+
+        private async void DropProgress(int value)
+        {
+            int progress = value;
+            while((progress > 0) && (progressBar.Value <= progress))
+            {
+                await Task.Delay(1);
+                progress -=2;
+                progressBar.Value = progress;
             }
         }
 
@@ -724,25 +933,101 @@ namespace Light_Controller_1._0
 
         private void setSelection(int potentiometerValue)
         {
-            if (PresetManager.activated) presetManager.scrollSelection(potentiometerValue);
+            if(colorPicker != null && colorPicker.IsShown)
+            {
+                int selection = Convert.ToInt32(potentiometerValue / 1023.0 * colorPicker.GetPresetCount());
+                colorPicker.PresetIndex = selection;
+            }
+            else if (PresetManager.activated) presetManager.scrollSelection(potentiometerValue);
             else
             {
-                int selection = potentiometerValue / ((980 / queue.Count) + 20);
-                if (selection != selectedPreset)
+                colorSelection = false;
+                int selection = Convert.ToInt32(potentiometerValue / 1023.0 * selectableControls.Count);
+                foreach(Control control in selectableControls)
                 {
-                    selectedPreset = selection;
-                    foreach (Control control in queueList.Controls) CheckPresetStatus(control, false);
-                    presetTools.Invoke(new Action(() => presetTools.Visible = true));
+                    bool selected = selectableControls.IndexOf(control) == selection;
+                    if(selected) selectedControl = control;
+                    if (control is Guna.UI.WinForms.GunaButton)
+                    {
+                        Guna.UI.WinForms.GunaButton button = control as Guna.UI.WinForms.GunaButton;
+                        button.BorderSize = selected ? 3 : 0;
+                        button.BorderColor = selected ? Color.Gray : Color.Transparent;
+                    }
+                    else if (control is Guna.UI.WinForms.GunaCheckBox)
+                    {
+                        Guna.UI.WinForms.GunaCheckBox button = control as Guna.UI.WinForms.GunaCheckBox;
+                        button.BackColor = Color.FromArgb(selected ? 100 : 0, 255, 255, 255);
+                    }
+                }
+            }
+        }
+
+        private void SelectColor(int potentiometerValue)
+        {
+            if(colorPicker != null && colorPicker.IsShown)
+            {
+                colorPicker.Brightness = Convert.ToInt32(potentiometerValue / 1023.0 * 390);
+            }
+            else
+            {
+                colorSelection = true;
+                int selection = Convert.ToInt32(potentiometerValue / 1023.0 * allColors.Count);
+                foreach (Control control in allColors)
+                {
+                    bool selected = allColors.IndexOf(control) == selection;
+                    if (selected) selectedColor = control;
+                    if (control is Guna.UI.WinForms.GunaButton)
+                    {
+                        Guna.UI.WinForms.GunaButton button = control as Guna.UI.WinForms.GunaButton;
+                        button.BaseColor = selected ? button.OnHoverBaseColor : Color.FromArgb(80, 80, 80);
+                    }
+                    if (control is Guna.UI2.WinForms.Guna2Button)
+                    {
+                        Guna.UI2.WinForms.Guna2Button button = control as Guna.UI2.WinForms.Guna2Button;
+                        button.FillColor = selected ? button.PressedColor : Color.FromArgb(50, 255, 255, 255);
+                    }
                 }
             }
         }
 
         private void buttonPress(string button)
         {
-            if (button.StartsWith("startNext"))
+            if (colorPicker != null && colorPicker.IsShown)
             {
-                if (PresetManager.activated) presetManager.addSelectedPresetsToQueue();
-                else startNext.Invoke(new Action(() => startNext.PerformClick()));
+                Invoke(colorPicker.OnResult);
+            } 
+            else if (button.StartsWith("startNext"))
+            {
+                if(PresetManager.activated) presetManager.addSelectedPresetsToQueue();
+                else if (colorSelection) PressSelectedColorButton();
+                else if(selectedControl != null)
+                {
+                    Console.WriteLine(selectedControl);
+                    if (selectedControl is Guna.UI.WinForms.GunaButton)
+                    {
+                        Guna.UI.WinForms.GunaButton gunaButton = selectedControl as Guna.UI.WinForms.GunaButton;
+                        gunaButton.Invoke(() => gunaButton.PerformClick());
+                    }
+                    else if (selectedControl is Guna.UI.WinForms.GunaCheckBox)
+                    {
+                        Guna.UI.WinForms.GunaCheckBox checkBox = selectedControl as Guna.UI.WinForms.GunaCheckBox;
+                        checkBox.Checked = !checkBox.Checked;
+                    }
+                }
+            }
+        }
+
+        private void PressSelectedColorButton()
+        {
+            if (selectedColor is Guna.UI.WinForms.GunaButton)
+            {
+                Guna.UI.WinForms.GunaButton button = selectedColor as Guna.UI.WinForms.GunaButton;
+                button.Invoke(() => button.PerformClick());
+            }
+            if (selectedColor is Guna.UI2.WinForms.Guna2Button)
+            {
+                Guna.UI2.WinForms.Guna2Button button = selectedColor as Guna.UI2.WinForms.Guna2Button;
+                button.Invoke(() => button.PerformClick());
             }
         }
 
@@ -750,8 +1035,15 @@ namespace Light_Controller_1._0
         {
             if (key.Equals("*"))
             {
-                if (PresetManager.activated) presetManager.Invoke(new Action(() => presetManager.Close()));
-                else presetManagerButton.Invoke(new Action(() => presetManagerButton.PerformClick()));
+                if (colorPicker != null && colorPicker.IsShown)
+                {
+                    colorPicker.Close();
+                }
+                else
+                {
+                    if (PresetManager.activated) presetManager.Invoke(new Action(() => presetManager.Close()));
+                    else presetManagerButton.Invoke(new Action(() => presetManagerButton.PerformClick()));
+                }
             }
             else if (key.Equals("#"))
             {
@@ -771,7 +1063,7 @@ namespace Light_Controller_1._0
         private async void StartPresetNumber(int number)
         {
             ShowOnDisplay("Preset " + keyboardNumber);
-            await Task.Delay(2100);
+            await Task.Delay(500);
             Console.WriteLine(keyboardNumber + "," + number);
             if (Convert.ToInt32(keyboardNumber) == number)
             {
@@ -782,10 +1074,19 @@ namespace Light_Controller_1._0
             }
         }
 
-        private void UpdateLightView(int number, Color color)
+        private void UpdateLightView(String data)
         {
+            String[] lightsData = data.Substring(0, data.Length - 1).Split('|');
             Label[] lights = { light1, light2, light3, light4 };
-            lights[number - 1].ForeColor = color;
+            for(int i = 0; i < lights.Length; i++)
+            {
+                int number = Convert.ToInt32(lightsData[i][0].ToString());
+                string[] colorString = lightsData[i].Substring(2).Split('/');
+                Console.WriteLine(lightsData[i].Substring(2));
+                Color color = Color.FromArgb(Convert.ToInt32(colorString[0]), 
+                    Convert.ToInt32(colorString[1]), Convert.ToInt32(colorString[2]));
+                lights[number - 1].ForeColor = color;
+            }
             foreach (Control control in queueList.Controls)
                 foreach (Control light in control.Controls)
                 {
@@ -797,23 +1098,12 @@ namespace Light_Controller_1._0
                 }
         }
 
-        private Color GetLightColor(string data)
-        {
-            int startIndex = data.IndexOf(">") + 1;
-            int r = Convert.ToInt32(data.Substring(startIndex, data.IndexOf("|") - startIndex));
-            data = data.Remove(0, data.IndexOf("|") + 1);
-            int g = Convert.ToInt32(data.Substring(0, data.IndexOf("|")));
-            data = data.Remove(0, data.IndexOf("|") + 1);
-            int b = Convert.ToInt32(data.Substring(0, data.Length - 1));
-            Console.WriteLine(r + "," + g + "," + b);
-            return Color.FromArgb(r, g, b);
-        }
-
         private async void SendAllColors(bool connecting)
         {
             if (connecting) displayView.Invoke(new Action(() => displayView.Text = "Connecting..."));
             Console.WriteLine("send");
             int[] colorCount = new int[4];
+            String command = "";
             foreach (Control control in panel1.Controls)
             {
                 int line = Convert.ToInt32(control.Tag.ToString());
@@ -826,17 +1116,18 @@ namespace Light_Controller_1._0
                         int column = Convert.ToInt32(buttonTag);
                         Color color = button.ForeColor;
                         Console.WriteLine(color.R + "/" + color.G + "/" + color.B);
-                        SendToArduino("setColor", column + "," + line + ">" + color.R +
-                            "/" + color.G + "/" + color.B);
+
+                        command += color.R + "/" + color.G + "/" + color.B + "|";
                         colorCount[column]++;
-                        await Task.Delay(10);
                     }
                 }
+                command += "n";
             }
-            SendToArduino("colorCount", colorCount[0] + "/" +
-                colorCount[1] + "/" + colorCount[2] + "/" + colorCount[3] + "/");
-            if (connecting) ShowOnDisplay("Connected");
-            await Task.Delay(10);
+            Console.WriteLine(command);
+            command += "c" + colorCount[0] + "/" + colorCount[1] + "/" + colorCount[2] + "/" + colorCount[3] + "/n";
+            SendToArduino("setColorGlobal", command);
+            if (connecting) ShowOnDisplay("Arduino Connected");
+            await Task.Delay(50);
             SendToArduino("fadeIn", Convert.ToString(fadeIn.Checked));
             await Task.Delay(10);
             SendToArduino("fadeOut", Convert.ToString(fadeOut.Checked));
@@ -880,6 +1171,7 @@ namespace Light_Controller_1._0
                        => control.Tag = lineNumber - 1));
                 }
             }
+            UpdateUsedColors();
             panel1.Invoke(new Action(() => panel1.Controls.Remove(button)));
         }
 
@@ -905,7 +1197,7 @@ namespace Light_Controller_1._0
 
         private void barSync_Click(object sender, EventArgs e)
         {
-            SendToArduino("skipToBeat", Convert.ToString(beat));
+            SendToArduino("barSync", "now");
         }
 
         private ColorHolder[][] GetCurrentColorsArray()
@@ -990,16 +1282,13 @@ namespace Light_Controller_1._0
         public void startPreset(Preset preset)
         {
             sendingPresetData = true;
-            string commands = String.Format("colorSpeed?{0}|brightness?{1}|fadeIn?{2}" +
-                "|fadeOut?{3}|barSync?{4}|", preset.colorSpeed, preset.brightness, preset.fadeIn,
-                preset.fadeOut, preset.barSync);
-            SendToArduino("commands", commands);
             displayView.Invoke(new Action(() => displayView.Text = String.Format("{0} is Loading...", preset.name)));
             bool[] lights = new bool[4];
             for (int b = 0; b < 4; b++) lights[b] = true;
             for (int i = colorCount; i < preset.colors.Length; i++)
                 Invoke(new Action(() => CreateColorGroup(lights)));
             UpdateColors(preset);
+            sendPresetData(preset);
             colorSpeed.Value = preset.colorSpeed * 24;
             brightness.Value = preset.brightness;
             speedRead = false;
@@ -1008,6 +1297,14 @@ namespace Light_Controller_1._0
                 playingPreset = preset;
                 foreach (Control control in queueList.Controls) CheckPresetStatus(control, true);
             }
+        }
+
+        private async void sendPresetData(Preset preset)
+        {
+            await Task.Delay(100);
+            string commands = String.Format("colorSpeed?{0}|brightness?{1}|fadeOut?{2}" +
+                "|fadeIn?{3}|", preset.colorSpeed, preset.brightness, preset.fadeOut, preset.fadeIn);
+            SendToArduino("commands", commands);
         }
 
         private async void UpdateColors(Preset preset)
@@ -1037,11 +1334,104 @@ namespace Light_Controller_1._0
             }
             foreach (Control remove in linesToRemove)
                 removeColorGroup((Guna.UI.WinForms.GunaButton)remove);
-            await Task.Delay(20);
             SendAllColors(false);
+            UpdateUsedColors();
+            await Task.Delay(20);
             fadeIn.Invoke(new Action(() => fadeIn.Checked = preset.fadeIn));
             fadeOut.Invoke(new Action(() => fadeOut.Checked = preset.fadeOut));
             ShowOnDisplay("Preset " + preset.name + " started");
+        }
+
+        private void UpdateUsedColors()
+        {
+            usedColors = new();
+            colorPanel.Controls.Clear();
+            int x = 10;
+            int number = 1;
+            foreach (Control control in panel1.Controls)
+            {
+                Panel panel = (Panel)control;
+                foreach (Control button in panel.Controls)
+                {
+                    string buttonTag = button.Tag.ToString();
+                    if (!buttonTag.Equals("Remove"))
+                    {
+                        Color color = button.ForeColor;
+                        if (!usedColors.Contains(color))
+                        {
+                            Guna.UI2.WinForms.Guna2Button colorButton = new();
+                            colorButton.ForeColor = Color.White;
+                            colorButton.FillColor = Color.FromArgb(50, 255, 255, 255);
+                            colorButton.PressedColor = Color.FromArgb(30, 255, 255, 255);
+                            Guna.UI.WinForms.GunaLabel colorLabel = new();
+                            colorLabel.BackColor = color;
+                            colorLabel.Size = new Size(30, 30);
+                            colorButton.Size = new Size(50, 70);
+                            colorLabel.Location = new Point(x + 10, 10);
+                            colorButton.Location = new Point(x, 0);
+                            colorButton.Text = "Color " + number;
+                            colorButton.TextOffset = new Point(0, 20);
+                            colorButton.Tag = color.R + "/" + color.G + "/" + color.B;
+                            colorButton.Click += ChangeUsedColor;
+                            colorPanel.Controls.Add(colorLabel);
+                            colorPanel.Controls.Add(colorButton);
+                            usedColors.Add(color);
+                            x += 60;
+                            number++;
+                        }
+                    }
+                }
+            }
+            loadColorSelection();
+        }
+
+        private void ChangeUsedColor(object sender, EventArgs e)
+        {
+
+            Guna.UI2.WinForms.Guna2Button button = (Guna.UI2.WinForms.Guna2Button)sender;
+            string[] colorFromTag = button.Tag.ToString().Split('/');
+            Color previousColor = Color.FromArgb(Convert.ToInt32(colorFromTag[0]), 
+                Convert.ToInt32(colorFromTag[1]), Convert.ToInt32(colorFromTag[2]));
+            colorPicker = new ColorPicker();
+            colorPicker.CurrentColor = previousColor;
+            colorPicker.Show();
+            colorPicker.OnResult = () =>
+            {
+                colorPicker.Close();
+                ChangeUsedColor(previousColor, colorPicker.SelectedColor);
+            };
+        }
+
+        private void ChangeUsedColor(Color previousColor, Color color)
+        {
+            foreach (Control control in panel1.Controls)
+            {
+                Panel panel = (Panel)control;
+                foreach (Control button in panel.Controls)
+                {
+                    string buttonTag = button.Tag.ToString();
+                    string previousTag = previousColor.R + "/" + previousColor.G + "/" + previousColor.B;
+                    string buttonColor = button.ForeColor.R + "/" + button.ForeColor.G + "/" + button.ForeColor.B;
+                    if (!buttonTag.Equals("Remove") && buttonColor.Equals(previousTag)) {
+                        button.Invoke(() => button.ForeColor = color);
+                        Guna.UI.WinForms.GunaButton gunaButton = button as Guna.UI.WinForms.GunaButton;
+                        gunaButton.Invoke(() => gunaButton.OnHoverForeColor = color);
+                    }
+                }
+            }
+            SendAllColors(false);
+            UpdateUsedColors();
+        }
+
+        private void ChangeUsedColor(string value)
+        {
+            int index = Convert.ToInt32(value.Substring(0, value.IndexOf(">")));
+            string[] colorVals = value.Substring(value.IndexOf(">") + 1).Split('/');
+            Color color = Color.FromArgb(255, 
+                Convert.ToInt32(colorVals[0]), 
+                Convert.ToInt32(colorVals[1]), 
+                Convert.ToInt32(colorVals[2]));
+            ChangeUsedColor(usedColors[index], color);
         }
 
         private void StartPresetButton_Click(object sender, EventArgs e)
@@ -1280,6 +1670,123 @@ namespace Light_Controller_1._0
             form.Size = new Size(300, 300);
             form.CreateBeatTapper(this);
             form.Show();
+        }
+
+        private void skipBeat_Click(object sender, EventArgs e)
+        {
+            SendToArduino("colorBeats", "skipColor");
+        }
+
+        private void setPositionX(int value)
+        {
+            if (colorPicker != null && colorPicker.IsShown)
+            {
+                value = Convert.ToInt32(value / 2.623);
+                int realValue = value - colorPicker.Pen.Width / 2;
+                if (value > 0 && value < colorPicker.Picker.Width)
+                {
+                    colorPicker.PenLocation = new Point(realValue, colorPicker.PenLocation.Y);
+                    ShowOnDisplay("Color X:" + value + " Y:" + (colorPicker.PenLocation.Y + colorPicker.Pen.Height / 2));
+                }
+            } else
+            {
+                value = Convert.ToInt32(value / 10.23);
+                xMotor.Value = value;
+                ShowOnDisplay("Position X: " + value);
+                moveMotor(true, value);
+
+            }
+        }
+
+        private void setPositionY(int value)
+        {
+            if (colorPicker != null && colorPicker.IsShown)
+            {
+                value = Convert.ToInt32(value / 4.092);
+                int realValue = value - colorPicker.Pen.Height / 2;
+                if (value > 0 && value < colorPicker.Picker.Height)
+                {
+                    colorPicker.PenLocation = new Point(colorPicker.PenLocation.X, realValue);
+                    ShowOnDisplay("Color X:" + (colorPicker.PenLocation.X + colorPicker.Pen.Width / 2) + " Y:" + value);
+                }
+            } else
+            {
+                value = Convert.ToInt32(value / 10.23);
+                yMotor.Value = value;
+                ShowOnDisplay("Position Y: " + value);
+                moveMotor(false, value);
+            }
+        }
+
+        private void InitMotors()
+        {
+            motorsChecked = new bool[4];
+            Guna.UI.WinForms.GunaLabel[] labels = { lightMotors1, lightMotors2, lightMotors3, lightMotors4 };
+            foreach(Guna.UI.WinForms.GunaLabel label in labels)
+            {
+                label.Click += LabelCheck;
+                label.MouseEnter += LabelHover;
+                label.MouseLeave += LabelLeave;
+            }
+        }
+
+        private void LabelCheck(object sender, EventArgs e)
+        {
+            Guna.UI.WinForms.GunaLabel label = (Guna.UI.WinForms.GunaLabel)sender;
+            int tag = Convert.ToInt32(label.Tag);
+            motorsChecked[tag - 1] = !motorsChecked[tag - 1];
+            label.BackColor = Color.FromArgb(motorsChecked[tag - 1] ? 50 : 0, 255, 255, 255);
+        }
+
+        private void LabelHover(object sender, EventArgs e)
+        {
+            Guna.UI.WinForms.GunaLabel label = (Guna.UI.WinForms.GunaLabel)sender;
+            int tag = Convert.ToInt32(label.Tag);
+            label.BackColor = Color.FromArgb(30, 255, 255, 255);
+        }
+
+        private void LabelLeave(object sender, EventArgs e)
+        {
+            Guna.UI.WinForms.GunaLabel label = (Guna.UI.WinForms.GunaLabel)sender;
+            int tag = Convert.ToInt32(label.Tag);
+            label.BackColor = Color.FromArgb(motorsChecked[tag - 1] ? 50 : 0, 255, 255, 255);
+        }
+
+        private void motorMirroring_CheckedChanged(object sender, EventArgs e)
+        {
+            Guna.UI.WinForms.GunaCheckBox checkBox = (Guna.UI.WinForms.GunaCheckBox)sender;
+            SendToArduino("motorMirroring", checkBox.Checked ? "True" : "False");
+        }
+
+        private void MainGUI_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.I:
+                    fadeIn.Checked = !fadeIn.Checked;
+                    break;
+
+                case Keys.O:
+                    fadeOut.Checked = !fadeOut.Checked;
+                    break;
+
+                case Keys.S:
+                    skipBeat.PerformClick();
+                    break;
+                case Keys.R:
+                    SendToArduino("resetMotors", "now");
+                    break;
+            }
+        }
+
+        private void sendDistance_Click(object sender, EventArgs e)
+        {
+            SendToArduino("beatDistance", Convert.ToString(beatDistance));
+        }
+
+        private void resetMotors_Click(object sender, EventArgs e)
+        {
+            SendToArduino("resetMotors", "now");
         }
     }
 }

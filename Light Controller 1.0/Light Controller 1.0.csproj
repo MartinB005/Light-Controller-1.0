@@ -74,6 +74,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorHolder.cs" />
+    <Compile Include="ColorPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColorPicker.Designer.cs">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="PresetManager.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,12 +98,21 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RotatedLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Startup.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Startup.Designer.cs">
       <DependentUpon>Startup.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ColorPicker.resx">
+      <DependentUpon>ColorPicker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomForm.resx">
+      <DependentUpon>CustomForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainGUI.resx">
       <DependentUpon>MainGUI.cs</DependentUpon>
     </EmbeddedResource>
@@ -140,6 +155,8 @@
   <ItemGroup>
     <Content Include="Light Controller.ico" />
     <Content Include="light_controller.ico" />
+    <None Include="Resources\light_setable_color.png" />
+    <None Include="Resources\light.png" />
     <None Include="Resources\LIGHT CONTROLLER.jpg" />
     <None Include="Resources\background.jpg" />
     <None Include="Resources\icon-removebg-preview.jpg" />

@@ -166,6 +166,7 @@ namespace Light_Controller_1._0
             {
                 if ((multiSelection) && (selectedPreset >= 0)) selectedPresets[selectedPreset] = true;
                 selectedPreset = Convert.ToInt32(panel.Tag.ToString());
+                flowLayoutPanel.Invoke(() => flowLayoutPanel.ScrollControlIntoView(panel));
                 bool unSelect = selectedPresets[selectedPreset] && multiSelection;
                 foreach (Control control in panel.Controls)
                     control.Invoke(new Action(() => control.BackColor = Color.Transparent));
@@ -353,7 +354,7 @@ namespace Light_Controller_1._0
 
         public void scrollSelection(int value)
         {
-            int selection = value / (980 / presets.Count + 10);
+            int selection = Convert.ToInt32(value / 1023.0 * presets.Count);
             if (selection != selectedPreset)
                 foreach (Panel item in flowLayoutPanel.Controls)
                     if (Convert.ToInt32(item.Tag.ToString()) == selection) SelectPreset(item, false);
